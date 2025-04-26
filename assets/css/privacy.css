@@ -1,0 +1,11 @@
+.policy-section:not(:last-child) {
+    border-bottom: 1px solid #dee2e6;
+}
+.toc-link {
+    color: inherit;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.toc-link:hover {
+    color: #0d6efd;
+}
