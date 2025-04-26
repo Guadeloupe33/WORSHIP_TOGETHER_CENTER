@@ -11,79 +11,66 @@
 
 	<!-- Dark mode -->
 	<script>
-		const storedTheme = localStorage.getItem('theme')
- 
-		const getPreferredTheme = () => {
-			if (storedTheme) {
-				return storedTheme
-			}
-			return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light'
-		}
+		// Handle Theme Switching
+const storedTheme = localStorage.getItem('theme');
 
-		const setTheme = function (theme) {
-			if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-				document.documentElement.setAttribute('data-bs-theme', 'dark')
-			} else {
-				document.documentElement.setAttribute('data-bs-theme', theme)
-			}
-		}
+const getPreferredTheme = () => {
+  if (storedTheme) {
+    return storedTheme;
+  }
+  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light';
+};
 
-		setTheme(getPreferredTheme())
+const setTheme = (theme) => {
+  if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-bs-theme', 'dark');
+  } else {
+    document.documentElement.setAttribute('data-bs-theme', theme);
+  }
+};
 
-		window.addEventListener('DOMContentLoaded', () => {
-		    var el = document.querySelector('.theme-icon-active');
-			if(el != 'undefined' && el != null) {
-				const showActiveTheme = theme => {
-				const activeThemeIcon = document.querySelector('.theme-icon-active use')
-				const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`)
-				const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href')
+setTheme(getPreferredTheme());
 
-				document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-					element.classList.remove('active')
-				})
+window.addEventListener('DOMContentLoaded', () => {
+  const el = document.querySelector('.theme-icon-active');
+  if (el !== undefined && el !== null) {
+    const showActiveTheme = (theme) => {
+      const activeThemeIcon = document.querySelector('.theme-icon-active use');
+      const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
+      const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href');
 
-				btnToActive.classList.add('active')
-				activeThemeIcon.setAttribute('href', svgOfActiveBtn)
-			}
+      document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
+        element.classList.remove('active');
+      });
 
-			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-				if (storedTheme !== 'light' || storedTheme !== 'dark') {
-					setTheme(getPreferredTheme())
-				}
-			})
+      btnToActive.classList.add('active');
+      activeThemeIcon.setAttribute('href', svgOfActiveBtn);
+    };
 
-			showActiveTheme(getPreferredTheme())
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      if (storedTheme !== 'light' && storedTheme !== 'dark') {
+        setTheme(getPreferredTheme());
+      }
+    });
 
-			document.querySelectorAll('[data-bs-theme-value]')
-				.forEach(toggle => {
-					toggle.addEventListener('click', () => {
-						const theme = toggle.getAttribute('data-bs-theme-value')
-						localStorage.setItem('theme', theme)
-						setTheme(theme)
-						showActiveTheme(theme)
-					})
-				})
+    showActiveTheme(getPreferredTheme());
 
-			}
-		})
-    window.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-  });
+    document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const theme = toggle.getAttribute('data-bs-theme-value');
+        localStorage.setItem('theme', theme);
+        setTheme(theme);
+        showActiveTheme(theme);
+      });
+    });
+  }
 
+  // Set current year in footer
+  document.getElementById('currentYear').textContent = new Date().getFullYear();
+});
 
-
-
-
-
-
-
-
-
-
-
-
-
-  const denominations = {
+// Religion denominations
+const denominations = {
   Christianity: ["Catholic", "Protestant", "Orthodox", "Baptist", "Methodist", "Anglican", "Pentecostal"],
   Islam: ["Sunni", "Shia", "Sufism"],
   Hinduism: ["Shaivism", "Vaishnavism", "Shaktism", "Smartism"],
@@ -96,9 +83,11 @@
   Taoism: ["Religious Taoism", "Philosophical Taoism"]
 };
 
+// Show the form based on type (personal or organization)
 function showForm(type) {
   const form = document.getElementById('dynamicFormContent');
-  form.innerHTML = ''; // clear existing fields
+  form.innerHTML = ''; // clear
+
   document.getElementById('signupForm').style.display = 'block';
 
   if (type === 'personal') {
@@ -106,11 +95,9 @@ function showForm(type) {
       <div class="mb-3 input-group-lg">
         <input type="text" class="form-control" placeholder="First Name" required>
       </div>
-
       <div class="mb-3 input-group-lg">
         <input type="text" class="form-control" placeholder="Last Name" required>
       </div>
-
       <div class="mb-3 input-group">
         <select class="form-select" required>
           <option selected disabled>Month</option>
@@ -125,7 +112,6 @@ function showForm(type) {
         </select>
         <select class="form-select" required id="yearSelect"></select>
       </div>
-
       <div class="mb-3 text-center">
         <label class="form-label d-block">Gender</label>
         <div class="d-flex justify-content-center gap-3 mt-2">
@@ -135,25 +121,6 @@ function showForm(type) {
         </div>
         <input type="hidden" id="genderInput" name="gender" required>
       </div>
-    `;
-  } else if (type === 'organization') {
-    form.innerHTML = `
-      <div class="mb-3 input-group-lg">
-        <input type="text" class="form-control" placeholder="Organization Name" required>
-      </div>
-
-      <div class="mb-3 input-group-lg">
-        <input type="text" class="form-control" placeholder="Organization Address" required>
-      </div>
-
-      <div class="mb-3 input-group-lg">
-        <input type="email" class="form-control" placeholder="Email" required>
-      </div>
-
-      <div class="mb-3 input-group-lg">
-        <input type="tel" class="form-control" placeholder="Phone Number" required>
-      </div>
-
       <div class="mb-3">
         <select class="form-select" id="religionSelect" onchange="populateDenominations()" required>
           <option selected disabled>Select Religion</option>
@@ -169,13 +136,46 @@ function showForm(type) {
           <option value="Taoism">Taoism</option>
         </select>
       </div>
-
       <div class="mb-3" id="denominationDiv" style="display:none;">
         <select class="form-select" id="denominationSelect" required>
           <option selected disabled>Select Denomination</option>
         </select>
       </div>
-
+    `;
+  } else if (type === 'organization') {
+    form.innerHTML = `
+      <div class="mb-3 input-group-lg">
+        <input type="text" class="form-control" placeholder="Organization Name" required>
+      </div>
+      <div class="mb-3 input-group-lg">
+        <input type="text" class="form-control" placeholder="Organization Address" required>
+      </div>
+      <div class="mb-3 input-group-lg">
+        <input type="email" class="form-control" placeholder="Email" id="email" required>
+      </div>
+      <div class="mb-3 input-group-lg">
+        <input type="tel" class="form-control" placeholder="Phone Number" required>
+      </div>
+      <div class="mb-3">
+        <select class="form-select" id="religionSelect" onchange="populateDenominations()" required>
+          <option selected disabled>Select Religion</option>
+          <option value="Christianity">Christianity</option>
+          <option value="Islam">Islam</option>
+          <option value="Hinduism">Hinduism</option>
+          <option value="Buddhism">Buddhism</option>
+          <option value="Sikhism">Sikhism</option>
+          <option value="Judaism">Judaism</option>
+          <option value="Bahai">Baháʼí Faith</option>
+          <option value="Jainism">Jainism</option>
+          <option value="Shinto">Shinto</option>
+          <option value="Taoism">Taoism</option>
+        </select>
+      </div>
+      <div class="mb-3" id="denominationDiv" style="display:none;">
+        <select class="form-select" id="denominationSelect" required>
+          <option selected disabled>Select Denomination</option>
+        </select>
+      </div>
       <div class="mb-3 text-center">
         <label class="form-label d-block">Is your organization a 501(c)(3)?</label>
         <div class="d-flex justify-content-center gap-3 mt-2">
@@ -184,39 +184,35 @@ function showForm(type) {
         </div>
         <input type="hidden" id="is501c3" name="is501c3" required>
       </div>
-
       <div class="mb-3 input-group-lg" id="taxIdDiv" style="display:none;">
         <input type="text" class="form-control" placeholder="Enter Tax ID Number" id="taxIdInput">
       </div>
     `;
   }
 
-  // Always add password fields for both
+  // Add password fields (always)
   form.innerHTML += `
     <div class="mb-3 input-group-lg">
-      <input type="password" class="form-control" placeholder="Enter Password" required>
+      <input type="password" id="password" class="form-control" placeholder="Enter Password" required>
     </div>
-
     <div class="mb-3 input-group-lg">
-      <input type="password" class="form-control" placeholder="Confirm Password" required>
+      <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" required>
     </div>
-
     <div class="d-grid">
       <button type="submit" class="btn btn-lg btn-primary" style="background-color: #6d63bc;">Sign me up</button>
     </div>
-
     <p class="mb-0 mt-3">©<span id="currentYear"></span> 
       <a target="_blank" href="https://www.Worshiptogethercenter.com">WORSHIP TOGETHER CENTER.</a> 
       All rights reserved
     </p>
   `;
 
-  // After setting the form, populate the year dropdown if it's personal
   if (type === 'personal') {
     populateYears();
   }
 }
 
+// Denomination Dropdown
 function populateDenominations() {
   const religion = document.getElementById('religionSelect').value;
   const denominationDiv = document.getElementById('denominationDiv');
@@ -237,20 +233,19 @@ function populateDenominations() {
   }
 }
 
+// Handle Gender Selection
 function selectGender(gender) {
   document.getElementById('genderInput').value = gender;
 }
 
+// Handle Tax ID (501c3)
 function showTaxId(answer) {
   document.getElementById('is501c3').value = answer;
   const taxIdDiv = document.getElementById('taxIdDiv');
-  if (answer === 'yes') {
-    taxIdDiv.style.display = 'block';
-  } else {
-    taxIdDiv.style.display = 'none';
-  }
+  taxIdDiv.style.display = (answer === 'yes') ? 'block' : 'none';
 }
 
+// Populate Year Dropdown
 function populateYears() {
   const yearSelect = document.getElementById('yearSelect');
   const currentYear = new Date().getFullYear();
@@ -262,9 +257,7 @@ function populateYears() {
   }
 }
 
-
-
-
+// Form Validation
 function validateForm(event) {
   event.preventDefault(); // Stop normal form submit
 
@@ -273,18 +266,35 @@ function validateForm(event) {
   let missingFields = [];
 
   inputs.forEach(input => {
-    if (input.hasAttribute('required') && !input.value.trim()) {
-      const placeholder = input.placeholder || input.name || "Unknown field";
-      missingFields.push(placeholder);
+    if (input.hasAttribute('required')) {
+      if (input.tagName === "SELECT") {
+        // For SELECT, check if the user picked a valid option (not disabled)
+        if (input.selectedIndex === 0 || input.options[input.selectedIndex].disabled) {
+          const label = input.previousElementSibling?.innerText || input.name || "Unknown field";
+          missingFields.push(label);
+        }
+      } else if (!input.value.trim()) {
+        const placeholder = input.placeholder || input.name || "Unknown field";
+        missingFields.push(placeholder);
+      }
     }
   });
 
-  // Special check: verify if Email and Verify Email match
-  const email = document.getElementById('email')?.value.trim();
-  const verifyEmail = document.getElementById('verifyEmail')?.value.trim();
+  const passwordInput = document.getElementById('password');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
 
-  if (email && verifyEmail && email !== verifyEmail) {
-    alert("Emails do not match. Please verify your email address.");
+  const password = passwordInput?.value.trim();
+  const confirmPassword = confirmPasswordInput?.value.trim();
+
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/;
+
+  if (!passwordRegex.test(password)) {
+    alert("Password must be at least 8 characters long and include:\n- One uppercase letter\n- One lowercase letter\n- One number\n- One special character (@, $, !, %, *, ?, &, #, ^)");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match. Please confirm your password.");
     return;
   }
 
@@ -296,11 +306,6 @@ function validateForm(event) {
   console.log("Form is valid! Submitting...");
   form.submit(); // Submit only if all fields are good
 }
-
-
-
-
-
 
 
 	</script>
