@@ -261,7 +261,48 @@ function populateYears() {
     yearSelect.appendChild(option);
   }
 }
-		
+
+
+
+
+function validateForm(event) {
+  event.preventDefault(); // Stop normal form submit
+
+  const form = document.getElementById('dynamicFormContent');
+  const inputs = form.querySelectorAll('input, select');
+  let missingFields = [];
+
+  inputs.forEach(input => {
+    if (input.hasAttribute('required') && !input.value.trim()) {
+      const placeholder = input.placeholder || input.name || "Unknown field";
+      missingFields.push(placeholder);
+    }
+  });
+
+  // Special check: verify if Email and Verify Email match
+  const email = document.getElementById('email')?.value.trim();
+  const verifyEmail = document.getElementById('verifyEmail')?.value.trim();
+
+  if (email && verifyEmail && email !== verifyEmail) {
+    alert("Emails do not match. Please verify your email address.");
+    return;
+  }
+
+  if (missingFields.length > 0) {
+    alert("Please complete the following fields:\n\n" + missingFields.join("\n"));
+    return;
+  }
+
+  console.log("Form is valid! Submitting...");
+  form.submit(); // Submit only if all fields are good
+}
+
+
+
+
+
+
+
 	</script>
 
 	<!-- Favicon -->
@@ -690,6 +731,26 @@ function populateYears() {
                   <input type="text" class="form-control" placeholder="Last Name" required>
                 </div>
             
+
+<!-- Email -->
+<div class="mb-3 input-group-lg">
+  <input type="email" class="form-control" id="email" placeholder="Email" required>
+</div>
+
+<!-- Verify Email -->
+<div class="mb-3 input-group-lg">
+  <input type="email" class="form-control" id="verifyEmail" placeholder="Verify Email" required>
+</div>
+
+<!-- Phone Number -->
+<div class="mb-3 input-group-lg">
+  <input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number" required>
+</div>
+
+
+
+
+
                 <!-- Birthday -->
                 <div class="mb-3 input-group">
                   <select class="form-select" required>
@@ -736,7 +797,7 @@ function populateYears() {
     <button type="button" class="btn btn-primary custom-button" onclick="selectGender('Male')">Male</button>
     <button type="button" class="btn btn-primary custom-button" onclick="selectGender('Custom')">Custom</button>
   </div>
-  <input type="hidden" id="genderInput" name="gender" required>
+  <input type="hidden" id="genderInput" name="gender">
 </div>
 
             
@@ -782,7 +843,8 @@ function populateYears() {
             
                 <!-- Button -->
                 <div class="d-grid">
-                  <button type="submit" class="btn btn-lg btn-primary" style="background-color: #6d63bc;">Sign me up</button>
+                  <button type="submit" class="btn btn-lg btn-primary" style="background-color: #6d63bc;" onclick="validateForm(event)">Sign me up</button>
+
                 </div>
             
                 <!-- Copyright -->
