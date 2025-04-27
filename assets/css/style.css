@@ -13,6 +13,12 @@
   color: white !important;
 }
 
+.error-message {
+  margin-top: 5px;
+  font-size: 0.85em;
+  color: red;
+}
+
 
 /* Account Type Button Highlight */
 .active-account {

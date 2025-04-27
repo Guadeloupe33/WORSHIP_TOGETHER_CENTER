@@ -10,7 +10,6 @@ const getPreferredTheme = () => {
   if (storedTheme) {
     return storedTheme;
   }
-  // Default to light if no preference
   return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light';
 };
 
@@ -30,7 +29,7 @@ setTheme(getPreferredTheme());
 window.addEventListener('DOMContentLoaded', () => {
   const el = document.querySelector('.theme-icon-active');
 
-  if (el !== undefined && el !== null) {
+  if (el) {
     const showActiveTheme = (theme) => {
       const activeThemeIcon = document.querySelector('.theme-icon-active use');
       const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
@@ -136,17 +135,14 @@ function showForm(type) {
         </div>
         <input type="hidden" id="genderInput" name="gender" required>
       </div>
-  
-      <!-- ✅ Add Email field here -->
       <div class="mb-3 input-group-lg">
-        <input type="email" class="form-control" placeholder="Email" required>
+        <input type="email" id="email" class="form-control" placeholder="Email" required>
+        <div class="invalid-feedback" id="emailError"></div>
       </div>
-  
-      <!-- ✅ Add Phone Number field here -->
       <div class="mb-3 input-group-lg">
-        <input type="tel" class="form-control" placeholder="Phone Number" required>
+        <input type="tel" id="phone" class="form-control" placeholder="Phone Number" required>
+        <div class="invalid-feedback" id="phoneError"></div>
       </div>
-  
       <div class="mb-3">
         <select class="form-select" id="religionSelect" onchange="populateDenominations()" required>
           <option selected disabled>Select Religion</option>
@@ -168,17 +164,24 @@ function showForm(type) {
         </select>
       </div>
     `;
-  }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  else if (type === 'organization') {
+    if (type === 'personal') {
+      function populateYears() {
+        const yearSelect = document.getElementById('yearSelect');
+        if (!yearSelect) return;
+      
+        yearSelect.innerHTML = '<option selected disabled>Year</option>'; // 💥 clear it first
+      
+        const currentYear = new Date().getFullYear();
+        for (let year = currentYear; year >= currentYear - 100; year--) {
+          const option = document.createElement('option');
+          option.value = year;
+          option.textContent = year;
+          yearSelect.appendChild(option);
+        }
+      }
+      ;
+    }
+  } else if (type === 'organization') {
     form.innerHTML = `
       <div class="mb-3 input-group-lg">
         <input type="text" class="form-control" placeholder="Organization Name" required>
@@ -187,13 +190,13 @@ function showForm(type) {
         <input type="text" class="form-control" placeholder="Organization Address" required>
       </div>
       <div class="mb-3 input-group-lg">
-        <input type="email" class="form-control" placeholder="Email" required>
+        <input type="email" id="email" class="form-control" placeholder="Email" required>
+        <div class="invalid-feedback" id="emailError"></div>
       </div>
       <div class="mb-3 input-group-lg">
-        <input type="tel" class="form-control" placeholder="Phone Number" required>
+        <input type="tel" id="phone" class="form-control" placeholder="Phone Number" required>
+        <div class="invalid-feedback" id="phoneError"></div>
       </div>
-  
-      <!-- ✅ 501(c)(3) Question -->
       <div class="mb-3 text-center">
         <label class="form-label d-block">Is your organization a 501(c)(3)?</label>
         <div class="d-flex justify-content-center gap-3 mt-2">
@@ -202,16 +205,12 @@ function showForm(type) {
         </div>
         <input type="hidden" id="is501c3" name="is501c3" required>
       </div>
-  
-      <!-- ✅ Hidden Tax ID Field (only shows if they click Yes) -->
       <div class="mb-3 input-group-lg" id="taxIdDiv" style="display:none;">
         <input type="text" class="form-control" placeholder="Enter Tax ID Number" id="taxIdInput">
       </div>
     `;
   }
-  
 
-  // Always add password fields and footer
   form.innerHTML += `
     <div class="mb-3 input-group-lg">
       <input type="password" id="password" class="form-control" placeholder="Enter Password" required>
@@ -222,168 +221,54 @@ function showForm(type) {
     <div class="d-grid">
       <button type="submit" class="btn btn-lg btn-primary" style="background-color: #6d63bc;" onclick="validateForm(event)">Sign me up</button>
     </div>
-    <p class="mb-0 mt-3">©<span id="currentYear"></span> 
-      <a target="_blank" href="https://www.Worshiptogethercenter.com">WORSHIP TOGETHER CENTER.</a> All rights reserved
-    </p>
+    <p class="mb-0 mt-3">©<span id="currentYear"></span> <a target="_blank" href="https://www.Worshiptogethercenter.com">WORSHIP TOGETHER CENTER.</a> All rights reserved</p>
   `;
 
-  // Populate year dropdown if personal
   if (type === 'personal') {
     populateYears();
   }
 
-  // 💥 Reset the footer year after inserting form
+  // Reset year again
   const currentYearElement = document.getElementById('currentYear');
   if (currentYearElement) {
     currentYearElement.textContent = new Date().getFullYear();
   }
+
+  setupLiveValidation();
 }
 
 // ==========================
-// Populate Denomination Options
+// Setup Live Validation (Email + Phone)
 // ==========================
+function setupLiveValidation() {
+  const emailInput = document.getElementById('email');
+  const emailError = document.getElementById('emailError');
+  const phoneInput = document.getElementById('phone');
+  const phoneError = document.getElementById('phoneError');
 
-function populateDenominations() {
-  const religion = document.getElementById('religionSelect').value;
-  const denominationDiv = document.getElementById('denominationDiv');
-  const denominationSelect = document.getElementById('denominationSelect');
-
-  denominationSelect.innerHTML = '<option selected disabled>Select Denomination</option>';
-
-  if (denominations[religion]) {
-    denominations[religion].forEach(denomination => {
-      const option = document.createElement('option');
-      option.value = denomination;
-      option.textContent = denomination;
-      denominationSelect.appendChild(option);
-    });
-    denominationDiv.style.display = 'block';
-  } else {
-    denominationDiv.style.display = 'none';
-  }
-}
-
-// ==========================
-// Highlight Selected Gender
-// ==========================
-
-function selectGender(gender) {
-  document.getElementById('genderInput').value = gender;
-
-  const buttons = document.querySelectorAll('.custom-button');
-  buttons.forEach(button => button.classList.remove('active-gender'));
-
-  const selectedButton = Array.from(buttons).find(btn => btn.textContent.trim() === gender);
-  if (selectedButton) {
-    selectedButton.classList.add('active-gender');
-  }
-}
-
-// ==========================
-// Populate Year Dropdown
-// ==========================
-
-function populateYears() {
-  const yearSelect = document.getElementById('yearSelect');
-  if (!yearSelect) {
-    console.error('populateYears: yearSelect not found.');
-    return;
-  }
-
-  const currentYear = new Date().getFullYear();
-  for (let y = currentYear; y >= currentYear - 100; y--) {
-    const option = document.createElement('option');
-    option.value = y;
-    option.textContent = y;
-    yearSelect.appendChild(option);
-  }
-}
-
-// ==========================
-// Validate Form
-// ==========================
-
-// ==========================
-// Validate Form
-// ==========================
-
-function validateForm(event) {
-  event.preventDefault();
-
-  const form = document.getElementById('dynamicFormContent');
-  const inputs = form.querySelectorAll('input, select');
-  let missingFields = [];
-
-  // Birthday fields
-  const monthSelect = document.getElementById('monthSelect');
-  const daySelect = document.getElementById('daySelect');
-  const yearSelect = document.getElementById('yearSelect');
-
-  if (monthSelect && monthSelect.selectedIndex === 0) missingFields.push('Month');
-  if (daySelect && daySelect.selectedIndex === 0) missingFields.push('Day');
-  if (yearSelect && yearSelect.selectedIndex === 0) missingFields.push('Year');
-
-  // Check all other required inputs
-  inputs.forEach(input => {
-    if (input.hasAttribute('required') && !input.value.trim()) {
-      const placeholder = input.placeholder || input.name || "Unknown field";
-      missingFields.push(placeholder);
-    }
-  });
-
-  // Validate Email Format
-  const emailInput = form.querySelector('input[type="email"]');
   if (emailInput) {
-    const email = emailInput.value.trim();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address.");
-      return;
-    }
+    emailInput.addEventListener('input', () => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(emailInput.value)) {
+        emailInput.classList.add('is-invalid');
+        emailError.textContent = 'Invalid email format.';
+      } else {
+        emailInput.classList.remove('is-invalid');
+        emailError.textContent = '';
+      }
+    });
   }
 
-  // Validate Phone Number Format
-  const phoneInput = form.querySelector('input[type="tel"]');
   if (phoneInput) {
-    const phone = phoneInput.value.trim();
-    const phoneRegex = /^[0-9]{10,15}$/; // Only digits, 10-15 characters
-    if (!phoneRegex.test(phone)) {
-      alert("Please enter a valid phone number (numbers only, 10 to 15 digits).");
-      return;
-    }
-  }
-
-  // Validate Password
-  const password = document.getElementById('password')?.value.trim();
-  const confirmPassword = document.getElementById('confirmPassword')?.value.trim();
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/;
-
-  if (!passwordRegex.test(password)) {
-    alert("Password must be at least 8 characters and include uppercase, lowercase, number, and special character.");
-    return;
-  }
-
-  if (password !== confirmPassword) {
-    alert("Passwords do not match.");
-    return;
-  }
-
-  if (missingFields.length > 0) {
-    alert("Please complete the following fields:\n\n" + missingFields.join("\n"));
-    return;
-  }
-
-  console.log("Form is valid! Submitting...");
-  form.submit();
-}
-function showTaxId(answer) {
-  document.getElementById('is501c3').value = answer;
-  const taxIdDiv = document.getElementById('taxIdDiv');
-  
-  if (answer === 'yes') {
-    taxIdDiv.style.display = 'block';
-  } else {
-    taxIdDiv.style.display = 'none';
+    phoneInput.addEventListener('input', () => {
+      const phoneRegex = /^[0-9]{10,15}$/;
+      if (!phoneRegex.test(phoneInput.value)) {
+        phoneInput.classList.add('is-invalid');
+        phoneError.textContent = 'Phone must be 10-15 digits.';
+      } else {
+        phoneInput.classList.remove('is-invalid');
+        phoneError.textContent = '';
+      }
+    });
   }
 }
-
