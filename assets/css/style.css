@@ -5,6 +5,22 @@
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
  */
  
+
+ /* New style for selected gender button */
+.active-gender {
+  background-color: #6d63bc !important; /* Nice purple color */
+  border-color: #6d63bc !important;
+  color: white !important;
+}
+
+
+/* Account Type Button Highlight */
+.active-account {
+  background-color: #6d63bc !important;
+  border-color: #6d63bc !important;
+  color: white !important;
+}
+
  .custom-button {
    background-color: #6d63bc;
    border: none;
@@ -12,6 +28,7 @@
    height: 50px;
    font-weight: 600;
    font-size: 16px;
+   transition: background-color 0.3s, border-color 0.3s, color 0.3s;
  }
  .custom-button:hover {
    background-color: #5a54a1; /* Slightly darker on hover */

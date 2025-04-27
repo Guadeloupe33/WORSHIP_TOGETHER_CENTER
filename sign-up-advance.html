@@ -506,10 +506,11 @@
 <div class="mb-3 text-center">
   <label class="form-label d-block">Gender</label>
   <div class="d-flex justify-content-center gap-3 mt-2">
-    <button type="button" class="btn btn-primary custom-button" onclick="selectGender('Female')">Female</button>
-    <button type="button" class="btn btn-primary custom-button" onclick="selectGender('Male')">Male</button>
-    <button type="button" class="btn btn-primary custom-button" onclick="selectGender('Custom')">Custom</button>
+    <button type="button" class="btn btn-primary custom-button gender-button" data-gender="Female" onclick="selectGender('Female')">Female</button>
+    <button type="button" class="btn btn-primary custom-button gender-button" data-gender="Male" onclick="selectGender('Male')">Male</button>
+    <button type="button" class="btn btn-primary custom-button gender-button" data-gender="Custom" onclick="selectGender('Custom')">Custom</button>
   </div>
+  
   <input type="hidden" id="genderInput" name="gender">
 </div>
 
@@ -561,18 +562,19 @@
                 </div>
             
                 <!-- Copyright -->
-                <p class="mb-0 mt-3">©<span id="currentYear"></span> 
+                <p class="mb-0 mt-3">
+                  ©<span id="currentYear"></span> 
                   <a target="_blank" href="https://www.Worshiptogethercenter.com">WORSHIP TOGETHER CENTER.</a> 
                   All rights reserved
                 </p>
+                
+                
+            
+                
               </form>
             </div>
             
-
-     
             <!-- Hidden Form END -->
-            
-
 
 
           </div>
@@ -586,20 +588,6 @@
     <!-- Container END -->
   </div>
   <!-- Main content END -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 </main>
 <!-- **************** MAIN CONTENT END **************** -->
@@ -663,6 +651,8 @@ JS libraries, plugins and custom scripts -->
 
 <!-- Theme Functions -->
 <script src="assets/js/functions.js"></script>
+<script src="assets/js/sign_up.js"></script>
+
  
 </body>
 </html>
