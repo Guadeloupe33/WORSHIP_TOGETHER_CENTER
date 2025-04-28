@@ -220,6 +220,148 @@ function updateDays() {
       denominationDiv.style.display = 'none'; // Hide if none
     }
   }
+  // Live password matching validation
+  document.addEventListener('DOMContentLoaded', function() {
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+  
+    if (passwordInput) {
+      passwordInput.addEventListener('input', validatePasswords);
+    }
+    if (confirmPasswordInput) {
+      confirmPasswordInput.addEventListener('input', validatePasswords);
+    }
+  
+    function validatePasswords() {
+      const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
+  
+      // Validate password strength
+      if (!strongPasswordRegex.test(passwordInput.value)) {
+        passwordInput.classList.add('is-invalid');
+      } else {
+        passwordInput.classList.remove('is-invalid');
+      }
+  
+      // Validate confirm password matches
+      if (passwordInput.value !== confirmPasswordInput.value || confirmPasswordInput.value === '') {
+        confirmPasswordInput.classList.add('is-invalid');
+      } else {
+        confirmPasswordInput.classList.remove('is-invalid');
+      }
+    }
+  });
+  
+  // Live validation for Email and Phone
+document.addEventListener('DOMContentLoaded', function() {
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phoneNumber');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+  
+    if (emailInput) {
+      emailInput.addEventListener('input', () => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(emailInput.value)) {
+          emailInput.classList.add('is-invalid');
+        } else {
+          emailInput.classList.remove('is-invalid');
+        }
+      });
+    }
+  
+    if (phoneInput) {
+      phoneInput.addEventListener('input', () => {
+        const phoneRegex = /^[0-9]{10,15}$/;
+        if (!phoneRegex.test(phoneInput.value)) {
+          phoneInput.classList.add('is-invalid');
+        } else {
+          phoneInput.classList.remove('is-invalid');
+        }
+      });
+    }
+  
+    if (passwordInput && confirmPasswordInput) {
+      passwordInput.addEventListener('input', validatePasswords);
+      confirmPasswordInput.addEventListener('input', validatePasswords);
+    }
+  
+    function validatePasswords() {
+      if (passwordInput.value !== confirmPasswordInput.value || confirmPasswordInput.value === '') {
+        confirmPasswordInput.classList.add('is-invalid');
+      } else {
+        confirmPasswordInput.classList.remove('is-invalid');
+      }
+    }
+  });
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.querySelector('form'); // or give your form an ID if you prefer
+  
+    form.addEventListener('submit', function(event) {
+      const firstName = document.querySelector('input[placeholder="First Name"]');
+      const lastName = document.querySelector('input[placeholder="Last Name"]');
+      const email = document.getElementById('email');
+      const phone = document.getElementById('phoneNumber');
+      const password = document.getElementById('password');
+      const confirmPassword = document.getElementById('confirmPassword');
+      const month = document.getElementById('monthSelect');
+      const day = document.getElementById('daySelect');
+      const year = document.getElementById('yearSelect');
+  
+      let formIsValid = true;
+  
+      // Check First Name
+      if (!firstName.value.trim()) {
+        firstName.classList.add('is-invalid');
+        formIsValid = false;
+      } else {
+        firstName.classList.remove('is-invalid');
+      }
+  
+      // Check Last Name
+      if (!lastName.value.trim()) {
+        lastName.classList.add('is-invalid');
+        formIsValid = false;
+      } else {
+        lastName.classList.remove('is-invalid');
+      }
+  
+      // Check Email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.value)) {
+        email.classList.add('is-invalid');
+        formIsValid = false;
+      } else {
+        email.classList.remove('is-invalid');
+      }
+  
+      // Check Birthday (Month/Day/Year must be selected)
+      if (!month.value || !day.value || !year.value) {
+        month.classList.add('is-invalid');
+        day.classList.add('is-invalid');
+        year.classList.add('is-invalid');
+        formIsValid = false;
+      } else {
+        month.classList.remove('is-invalid');
+        day.classList.remove('is-invalid');
+        year.classList.remove('is-invalid');
+      }
+  
+      // Check Passwords match
+      if (password.value !== confirmPassword.value || password.value === '') {
+        confirmPassword.classList.add('is-invalid');
+        formIsValid = false;
+      } else {
+        confirmPassword.classList.remove('is-invalid');
+      }
+  
+      if (!formIsValid) {
+        event.preventDefault(); // 🚫 stop form from submitting
+        event.stopPropagation();
+      }
+    });
+  });
+  
+  
   
   
 
