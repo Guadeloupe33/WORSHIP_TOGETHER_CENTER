@@ -42,7 +42,7 @@
           <div class="text-center">
             <!-- Title -->
             <h1 class="mb-2">Create a new account</h1>
-			<span class="d-block mt-3">Organization account? <a href="sign-in.html">Sign up here</a></span>
+			<span class="d-block mt-3">Are you creating a personal account? <a href="sign-up.html">Sign up here</a></span>
             
           </div>
           <!-- Form START -->
@@ -75,6 +75,23 @@
 	<input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number" required>
 	<small class="invalid-feedback">Please enter a valid phone number (10-15 digits).</small>
   </div>
+
+  <!-- Are you a 501(c)(3)? -->
+<!-- Are you a 501(c)(3)? -->
+<div class="mb-3 text-center">
+	<label class="form-label d-block mb-2">Is your organization a 501(c)(3)?</label>
+	<div class="d-flex justify-content-center gap-3">
+	  <button type="button" class="btn btn-outline-primary" id="btn501Yes" onclick="toggleTaxId(true)">Yes</button>
+	  <button type="button" class="btn btn-outline-primary" id="btn501No" onclick="toggleTaxId(false)">No</button>
+	</div>
+  </div>
+  
+  
+  <!-- Tax ID (hidden by default) -->
+  <div class="mb-3 input-group-lg" id="taxIdField" style="display: none;">
+	<input type="text" class="form-control" id="taxId" placeholder="Enter Tax ID (EIN)">
+  </div>
+  
   <div class="mb-3">
 	<select class="form-select" id="religionSelect" onchange="populateDenominations()" required>
 	  <option selected disabled>Select Religion</option>
