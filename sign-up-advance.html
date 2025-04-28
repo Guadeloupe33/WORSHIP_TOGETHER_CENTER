@@ -421,12 +421,14 @@
 
             <div class="text-center">
               <h2 class="h1 mb-2">Sign up</h2>
-              <span class="d-block">Already have an account? <a href="sign-in.html">Sign in here</a></span>
+              <span class="d-block">Already have an account? <a href="sign-in-advance.html">Sign in here</a></span>
             
               <!-- Buttons -->
               <div class="d-flex justify-content-center gap-3 mt-3">
-                <button type="button" class="btn btn-primary custom-button" onclick="showForm('personal')">Personal</button>
-                <button type="button" class="btn btn-primary custom-button" onclick="showForm('organization')">Organization</button>
+                <button type="button" class="btn btn-primary custom-button account-type-button" id="personalButton" onclick="showForm('personal')">Personal</button>
+
+                <button type="button" class="btn btn-primary custom-button account-type-button" id="organizationButton" onclick="showForm('organization')">Organization</button>
+                
               </div>
             </div>
             

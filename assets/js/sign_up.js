@@ -1,100 +1,79 @@
 // ==========================
 // Handle Theme Switching
 // ==========================
-
-// Get the saved theme from localStorage
-const storedTheme = localStorage.getItem('theme');
-
-// Determine the preferred theme (light/dark)
-const getPreferredTheme = () => {
-  if (storedTheme) {
-    return storedTheme;
-  }
-  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light';
-};
-
-// Set the theme on the page
-const setTheme = (theme) => {
-  if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-bs-theme', 'dark');
-  } else {
-    document.documentElement.setAttribute('data-bs-theme', theme);
-  }
-};
-
-// Apply theme immediately
-setTheme(getPreferredTheme());
-
-// Setup theme and footer year after page loads
-window.addEventListener('DOMContentLoaded', () => {
-  const el = document.querySelector('.theme-icon-active');
-
-  if (el) {
-    const showActiveTheme = (theme) => {
-      const activeThemeIcon = document.querySelector('.theme-icon-active use');
-      const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
-      const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href');
-
-      document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-        element.classList.remove('active');
-      });
-
-      btnToActive.classList.add('active');
-      activeThemeIcon.setAttribute('href', svgOfActiveBtn);
-    };
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (storedTheme !== 'light' && storedTheme !== 'dark') {
-        setTheme(getPreferredTheme());
-      }
-    });
-
-    showActiveTheme(getPreferredTheme());
-
-    document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
-      toggle.addEventListener('click', () => {
-        const theme = toggle.getAttribute('data-bs-theme-value');
-        localStorage.setItem('theme', theme);
-        setTheme(theme);
-        showActiveTheme(theme);
-      });
-    });
-  }
-
-  // Set the current year in the footer
-  const currentYearElement = document.getElementById('currentYear');
-  if (currentYearElement) {
-    currentYearElement.textContent = new Date().getFullYear();
-  }
-});
+// [This part already exists in your file, leave it as is ✅]
 
 // ==========================
 // Religion Denominations
 // ==========================
+// [This part already exists too ✅]
 
-const denominations = {
-  Christianity: ["Catholic", "Protestant", "Orthodox", "Baptist", "Methodist", "Anglican", "Pentecostal"],
-  Islam: ["Sunni", "Shia", "Sufism"],
-  Hinduism: ["Shaivism", "Vaishnavism", "Shaktism", "Smartism"],
-  Buddhism: ["Theravāda", "Mahāyāna", "Vajrayāna"],
-  Sikhism: ["Khalsa", "Nirankari"],
-  Judaism: ["Orthodox", "Conservative", "Reform", "Reconstructionist"],
-  Bahai: ["Baháʼí"],
-  Jainism: ["Digambara", "Śvētāmbara"],
-  Shinto: ["Shrine Shinto", "Sect Shinto"],
-  Taoism: ["Religious Taoism", "Philosophical Taoism"]
-};
+// ==========================
+// Populate Denominations
+// ==========================
+function populateDenominations() {
+  const religion = document.getElementById('religionSelect')?.value;
+  const denominationDiv = document.getElementById('denominationDiv');
+  const denominationSelect = document.getElementById('denominationSelect');
+
+  if (!religion || !denominationDiv || !denominationSelect) return;
+
+  denominationSelect.innerHTML = '<option selected disabled>Select Denomination</option>';
+
+  if (denominations[religion]) {
+    denominations[religion].forEach(denomination => {
+      const option = document.createElement('option');
+      option.value = denomination;
+      option.textContent = denomination;
+      denominationSelect.appendChild(option);
+    });
+    denominationDiv.style.display = 'block';
+  } else {
+    denominationDiv.style.display = 'none';
+  }
+}
+
+// ==========================
+// Select Gender
+// ==========================
+function selectGender(gender) {
+  const genderInput = document.getElementById('genderInput');
+  if (!genderInput) return;
+
+  genderInput.value = gender;
+
+  const buttons = document.querySelectorAll('.custom-button');
+  buttons.forEach(button => button.classList.remove('active-gender'));
+
+  const selectedButton = Array.from(buttons).find(btn => btn.textContent.trim() === gender);
+  selectedButton?.classList.add('active-gender');
+}
+
+// ==========================
+// Populate Year Dropdown
+// ==========================
+function populateYears() {
+  const yearSelect = document.getElementById('yearSelect');
+  if (!yearSelect) return;
+
+  const currentYear = new Date().getFullYear();
+  yearSelect.innerHTML = '<option selected disabled>Year</option>'; // reset first
+  for (let year = currentYear; year >= currentYear - 100; year--) {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearSelect.appendChild(option);
+  }
+}
 
 // ==========================
 // Show Form (Personal or Organization)
 // ==========================
-
 function showForm(type) {
   const form = document.getElementById('dynamicFormContent');
   form.innerHTML = '';
   document.getElementById('signupForm').style.display = 'block';
 
-  // Highlight selected account type button
   const accountButtons = document.querySelectorAll('.account-type-button');
   accountButtons.forEach(button => button.classList.remove('active-account'));
 
@@ -103,7 +82,6 @@ function showForm(type) {
     activeButton.classList.add('active-account');
   }
 
-  // Build form HTML
   if (type === 'personal') {
     form.innerHTML = `
       <div class="mb-3 input-group-lg">
@@ -164,23 +142,6 @@ function showForm(type) {
         </select>
       </div>
     `;
-    if (type === 'personal') {
-      function populateYears() {
-        const yearSelect = document.getElementById('yearSelect');
-        if (!yearSelect) return;
-      
-        yearSelect.innerHTML = '<option selected disabled>Year</option>'; // 💥 clear it first
-      
-        const currentYear = new Date().getFullYear();
-        for (let year = currentYear; year >= currentYear - 100; year--) {
-          const option = document.createElement('option');
-          option.value = year;
-          option.textContent = year;
-          yearSelect.appendChild(option);
-        }
-      }
-      ;
-    }
   } else if (type === 'organization') {
     form.innerHTML = `
       <div class="mb-3 input-group-lg">
@@ -206,7 +167,7 @@ function showForm(type) {
         <input type="hidden" id="is501c3" name="is501c3" required>
       </div>
       <div class="mb-3 input-group-lg" id="taxIdDiv" style="display:none;">
-        <input type="text" class="form-control" placeholder="Enter Tax ID Number" id="taxIdInput">
+        <input type="text" id="taxIdInput" class="form-control" placeholder="Tax ID Number">
       </div>
     `;
   }
@@ -219,42 +180,65 @@ function showForm(type) {
       <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm Password" required>
     </div>
     <div class="d-grid">
-      <button type="submit" class="btn btn-lg btn-primary" style="background-color: #6d63bc;" onclick="validateForm(event)">Sign me up</button>
+      <button type="submit" class="btn btn-lg btn-primary" onclick="validateForm(event)">Sign me up</button>
     </div>
-    <p class="mb-0 mt-3">©<span id="currentYear"></span> <a target="_blank" href="https://www.Worshiptogethercenter.com">WORSHIP TOGETHER CENTER.</a> All rights reserved</p>
+    <p class="mb-0 mt-3">©<span id="currentYear"></span> <a href="https://www.Worshiptogethercenter.com" target="_blank">WORSHIP TOGETHER CENTER.</a> All rights reserved.</p>
   `;
 
-  if (type === 'personal') {
-    populateYears();
-  }
-
-  // Reset year again
-  const currentYearElement = document.getElementById('currentYear');
-  if (currentYearElement) {
-    currentYearElement.textContent = new Date().getFullYear();
-  }
-
+  populateYears();
   setupLiveValidation();
 }
 
+
+
+
+
+
+function showTaxId(answer) {
+  const taxIdDiv = document.getElementById('taxIdDiv');
+  const is501c3Input = document.getElementById('is501c3');
+
+  if (!taxIdDiv || !is501c3Input) return;
+
+  is501c3Input.value = answer;
+
+  if (answer === 'yes') {
+    taxIdDiv.style.display = 'block';
+  } else {
+    taxIdDiv.style.display = 'none';
+  }
+}
+
+
 // ==========================
-// Setup Live Validation (Email + Phone)
+// Validate Form
+// ==========================
+function validateForm(event) {
+  event.preventDefault();
+
+  const formData = collectUserData();
+  console.log('User data ready for backend:', formData);
+
+
+
+
+
+// ==========================
+// Setup Live Validation
 // ==========================
 function setupLiveValidation() {
   const emailInput = document.getElementById('email');
-  const emailError = document.getElementById('emailError');
   const phoneInput = document.getElementById('phone');
-  const phoneError = document.getElementById('phoneError');
+  const passwordInput = document.getElementById('password');
+  const confirmPasswordInput = document.getElementById('confirmPassword');
 
   if (emailInput) {
     emailInput.addEventListener('input', () => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(emailInput.value)) {
         emailInput.classList.add('is-invalid');
-        emailError.textContent = 'Invalid email format.';
       } else {
         emailInput.classList.remove('is-invalid');
-        emailError.textContent = '';
       }
     });
   }
@@ -264,11 +248,67 @@ function setupLiveValidation() {
       const phoneRegex = /^[0-9]{10,15}$/;
       if (!phoneRegex.test(phoneInput.value)) {
         phoneInput.classList.add('is-invalid');
-        phoneError.textContent = 'Phone must be 10-15 digits.';
       } else {
         phoneInput.classList.remove('is-invalid');
-        phoneError.textContent = '';
       }
     });
   }
+
+  if (passwordInput) {
+    passwordInput.addEventListener('input', () => {
+      const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^])[A-Za-z\d@$!%*?&#^]{8,}$/;
+      if (!passwordRegex.test(passwordInput.value)) {
+        passwordInput.classList.add('is-invalid');
+      } else {
+        passwordInput.classList.remove('is-invalid');
+      }
+    });
+  }
+
+  if (confirmPasswordInput) {
+    confirmPasswordInput.addEventListener('input', () => {
+      if (passwordInput.value !== confirmPasswordInput.value) {
+        confirmPasswordInput.classList.add('is-invalid');
+      } else {
+        confirmPasswordInput.classList.remove('is-invalid');
+      }
+    });
+  }
+}
+
+
+
+
+  // Later: Here you will send it to your server/database
+  alert('Form is valid! Ready to submit 🚀');
+}
+
+// ==========================
+// Collect User Data
+// ==========================
+function collectUserData() {
+  const data = {};
+
+  data.firstName = document.querySelector('input[placeholder="First Name"]')?.value.trim() || '';
+  data.lastName = document.querySelector('input[placeholder="Last Name"]')?.value.trim() || '';
+  data.email = document.getElementById('email')?.value.trim() || '';
+  data.phone = document.getElementById('phone')?.value.trim() || '';
+  data.password = document.getElementById('password')?.value.trim() || '';
+  data.accountType = document.querySelector('.active-account')?.id?.includes('personal') ? 'personal' : 'organization';
+
+  if (data.accountType === 'personal') {
+    data.birthMonth = document.getElementById('monthSelect')?.value || '';
+    data.birthDay = document.getElementById('daySelect')?.value || '';
+    data.birthYear = document.getElementById('yearSelect')?.value || '';
+    data.gender = document.getElementById('genderInput')?.value || '';
+    data.religion = document.getElementById('religionSelect')?.value || '';
+    data.denomination = document.getElementById('denominationSelect')?.value || '';
+  } else if (data.accountType === 'organization') {
+    data.organizationName = document.querySelector('input[placeholder="Organization Name"]')?.value.trim() || '';
+    data.organizationAddress = document.querySelector('input[placeholder="Organization Address"]')?.value.trim() || '';
+    data.is501c3 = document.getElementById('is501c3')?.value || '';
+    data.taxId = document.getElementById('taxIdInput')?.value.trim() || '';
+  }
+
+  return data;
 }
