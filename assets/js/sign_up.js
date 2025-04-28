@@ -89,49 +89,139 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Populate Years dynamically
 document.addEventListener('DOMContentLoaded', function() {
-  const yearSelect = document.getElementById('yearSelect');
-  if (yearSelect) {
-    const currentYear = new Date().getFullYear();
-    const earliestYear = currentYear - 100; // last 100 years
-    for (let year = currentYear; year >= earliestYear; year--) {
-      const option = document.createElement('option');
-      option.value = year;
-      option.textContent = year;
-      yearSelect.appendChild(option);
+
+    // Set Footer Year
+    const yearSpan = document.getElementById('currentYear2');
+    if (yearSpan) {
+      yearSpan.textContent = new Date().getFullYear();
     }
-  }
-});
+  
+    // Populate Years
+    const yearSelect = document.getElementById('yearSelect');
+    if (yearSelect) {
+      const currentYear = new Date().getFullYear();
+      const earliestYear = currentYear - 100;
+      for (let year = currentYear; year >= earliestYear; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+      }
+    }
+  
+    // Call updateDays once initially
+    updateDays();
+  });
 
 // Update Days dynamically based on selected Month and Year
 function updateDays() {
-  const month = parseInt(document.getElementById('monthSelect').value);
-  const year = parseInt(document.getElementById('yearSelect').value) || new Date().getFullYear();
-  const daySelect = document.getElementById('daySelect');
-
-  if (!month || !daySelect) return;
-
-  let daysInMonth = 31;
-
-  // Determine days in selected month
-  if (month === 2) {
-    // February
-    daysInMonth = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 29 : 28;
-  } else if ([4, 6, 9, 11].includes(month)) {
-    // April, June, September, November
-    daysInMonth = 30;
+    const month = parseInt(document.getElementById('monthSelect').value);
+    const year = parseInt(document.getElementById('yearSelect').value) || new Date().getFullYear();
+    const daySelect = document.getElementById('daySelect');
+  
+    if (!month || !daySelect) {
+      // If month not selected, reset days to 1-31 just in case
+      daySelect.innerHTML = '<option selected disabled>Day</option>';
+      for (let day = 1; day <= 31; day++) {
+        const option = document.createElement('option');
+        option.value = day;
+        option.textContent = day;
+        daySelect.appendChild(option);
+      }
+      return;
+    }
+  
+    let daysInMonth = 31;
+  
+    if (month === 2) {
+      daysInMonth = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0)) ? 29 : 28;
+    } else if ([4, 6, 9, 11].includes(month)) {
+      daysInMonth = 30;
+    }
+  
+    daySelect.innerHTML = '<option selected disabled>Day</option>';
+    for (let day = 1; day <= daysInMonth; day++) {
+      const option = document.createElement('option');
+      option.value = day;
+      option.textContent = day;
+      daySelect.appendChild(option);
+    }
   }
-
-  // Clear current day options
-  daySelect.innerHTML = '<option selected disabled>Day</option>';
-
-  // Populate new day options
-  for (let day = 1; day <= daysInMonth; day++) {
-    const option = document.createElement('option');
-    option.value = day;
-    option.textContent = day;
-    daySelect.appendChild(option);
+  const denominations = {
+    "Christianity": [
+      "Catholic",
+      "Protestant",
+      "Eastern Orthodox",
+      "Oriental Orthodox",
+      "Anglican"
+    ],
+    "Islam": [
+      "Sunni",
+      "Shia",
+      "Sufism"
+    ],
+    "Hinduism": [
+      "Vaishnavism",
+      "Shaivism",
+      "Shaktism",
+      "Smartism"
+    ],
+    "Buddhism": [
+      "Theravāda",
+      "Mahāyāna",
+      "Vajrayāna"
+    ],
+    "Sikhism": [
+      "Khalsa",
+      "Namdhari",
+      "Nirankari"
+    ],
+    "Judaism": [
+      "Orthodox",
+      "Conservative",
+      "Reform",
+      "Reconstructionist"
+    ],
+    "Baháʼí Faith": [
+      "None (Single denomination)"
+    ],
+    "Jainism": [
+      "Digambara",
+      "Śvētāmbara"
+    ],
+    "Shinto": [
+      "Shrine Shinto",
+      "Sect Shinto"
+    ],
+    "Taoism": [
+      "Religious Taoism",
+      "Philosophical Taoism"
+    ]
+  };
+  
+  function populateDenominations() {
+    const religion = document.getElementById('religionSelect').value;
+    const denominationDiv = document.getElementById('denominationDiv');
+    const denominationSelect = document.getElementById('denominationSelect');
+  
+    if (!religion || !denominationDiv || !denominationSelect) return;
+  
+    denominationSelect.innerHTML = '<option selected disabled>Select Denomination</option>';
+  
+    if (denominations[religion]) {
+      denominations[religion].forEach(denomination => {
+        const option = document.createElement('option');
+        option.value = denomination;
+        option.textContent = denomination;
+        denominationSelect.appendChild(option);
+      });
+      denominationDiv.style.display = 'block'; // Show submenu
+    } else {
+      denominationDiv.style.display = 'none'; // Hide if none
+    }
   }
-}
+  
+  
 
   
   

@@ -67,6 +67,11 @@
     <input type="email" class="form-control" placeholder="Enter email" required>
     <small>We'll never share your email with anyone else.</small>
   </div>
+  <!-- Phone Number -->
+<div class="mb-3 input-group-lg">
+	<input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number" required>
+  </div>
+  
 
   <!-- Birthday -->
   <!-- Birthday -->
@@ -113,6 +118,30 @@
 	  <button type="button" class="btn btn-outline-primary gender-button" data-gender="Custom" onclick="selectGender(this)">Custom</button>
 	</div>
 	<input type="hidden" id="genderInput" name="gender">
+  </div>
+  
+<!-- Religion -->
+<div class="mb-3">
+	<select class="form-select" id="religionSelect" onchange="populateDenominations()" required>
+	  <option selected disabled>Select Religion</option>
+	  <option value="Christianity">Christianity</option>
+	  <option value="Islam">Islam</option>
+	  <option value="Hinduism">Hinduism</option>
+	  <option value="Buddhism">Buddhism</option>
+	  <option value="Sikhism">Sikhism</option>
+	  <option value="Judaism">Judaism</option>
+	  <option value="Baháʼí Faith">Baháʼí Faith</option>
+	  <option value="Jainism">Jainism</option>
+	  <option value="Shinto">Shinto</option>
+	  <option value="Taoism">Taoism</option>
+	</select>
+  </div>
+  
+  <!-- Denomination (Submenu) -->
+  <div class="mb-3" id="denominationDiv" style="display: none;">
+	<select class="form-select" id="denominationSelect" required>
+	  <option selected disabled>Select Denomination</option>
+	</select>
   </div>
   
 
