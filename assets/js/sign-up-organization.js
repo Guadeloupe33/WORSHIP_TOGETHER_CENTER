@@ -1,5 +1,4 @@
-document.addEventListener('DOMContentLoaded', function() {
-
+document.addEventListener('DOMContentLoaded', function () {
     // ==========================
     // Set Footer Year
     // ==========================
@@ -7,65 +6,61 @@ document.addEventListener('DOMContentLoaded', function() {
     if (yearSpan) {
       yearSpan.textContent = new Date().getFullYear();
     }
-    // Activate Bootstrap popover
-const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
-popoverTriggerList.map(function (popoverTriggerEl) {
-  return new bootstrap.Popover(popoverTriggerEl);
-});
-
-
-// Handle Gender Button Click
-
-
-// Handle Religion Dropdown Change
-const religionSelect = document.getElementById('religionSelect');
-const denominationDiv = document.getElementById('denominationDiv');
-const denominationSelect = document.getElementById('denominationSelect');
-
-const denominations = {
-  "Christianity": ["Catholic", "Protestant", "Eastern Orthodox", "Oriental Orthodox", "Anglican"],
-  "Islam": ["Sunni", "Shia", "Sufism"],
-  "Hinduism": ["Vaishnavism", "Shaivism", "Shaktism", "Smartism"],
-  "Buddhism": ["Theravāda", "Mahāyāna", "Vajrayāna"],
-  "Sikhism": ["Khalsa", "Namdhari", "Nirankari"],
-  "Judaism": ["Orthodox", "Conservative", "Reform", "Reconstructionist"],
-  "Baháʼí Faith": ["None (Single denomination)"],
-  "Jainism": ["Digambara", "Śvētāmbara"],
-  "Shinto": ["Shrine Shinto", "Sect Shinto"],
-  "Taoism": ["Religious Taoism", "Philosophical Taoism"]
-};
-
-if (religionSelect) {
-  religionSelect.addEventListener('change', function() {
-    const religion = religionSelect.value;
-
-    denominationSelect.innerHTML = '<option selected disabled>Select Denomination</option>';
-
-    if (denominations[religion]) {
-      denominations[religion].forEach(denomination => {
-        const option = document.createElement('option');
-        option.value = denomination;
-        option.textContent = denomination;
-        denominationSelect.appendChild(option);
-      });
-      denominationDiv.style.display = 'block'; // Show denomination box
-    } else {
-      denominationDiv.style.display = 'none'; // Hide if no options
-    }
-  });
-}
-
   
     // ==========================
-    // Handle Theme Switching
+    // Activate Bootstrap Popovers
+    // ==========================
+    const popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'));
+    popoverTriggerList.map(function (popoverTriggerEl) {
+      return new bootstrap.Popover(popoverTriggerEl);
+    });
+  
+    // ==========================
+    // Handle Religion Dropdown Change
+    // ==========================
+    const religionSelect = document.getElementById('religionSelect');
+    const denominationDiv = document.getElementById('denominationDiv');
+    const denominationSelect = document.getElementById('denominationSelect');
+  
+    const denominations = {
+      "Christianity": ["Catholic", "Protestant", "Eastern Orthodox", "Oriental Orthodox", "Anglican"],
+      "Islam": ["Sunni", "Shia", "Sufism"],
+      "Hinduism": ["Vaishnavism", "Shaivism", "Shaktism", "Smartism"],
+      "Buddhism": ["Theravāda", "Mahāyāna", "Vajrayāna"],
+      "Sikhism": ["Khalsa", "Namdhari", "Nirankari"],
+      "Judaism": ["Orthodox", "Conservative", "Reform", "Reconstructionist"],
+      "Baháʼí Faith": ["None (Single denomination)"],
+      "Jainism": ["Digambara", "Śvētāmbara"],
+      "Shinto": ["Shrine Shinto", "Sect Shinto"],
+      "Taoism": ["Religious Taoism", "Philosophical Taoism"]
+    };
+  
+    if (religionSelect) {
+      religionSelect.addEventListener('change', function () {
+        const religion = religionSelect.value;
+        denominationSelect.innerHTML = '<option selected disabled>Select Denomination</option>';
+        if (denominations[religion]) {
+          denominations[religion].forEach(denomination => {
+            const option = document.createElement('option');
+            option.value = denomination;
+            option.textContent = denomination;
+            denominationSelect.appendChild(option);
+          });
+          denominationDiv.style.display = 'block';
+        } else {
+          denominationDiv.style.display = 'none';
+        }
+      });
+    }
+  
+    // ==========================
+    // Theme Switcher
     // ==========================
     const storedTheme = localStorage.getItem('theme');
-  
     const getPreferredTheme = () => {
       if (storedTheme) return storedTheme;
       return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light';
     };
-  
     const setTheme = (theme) => {
       if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.setAttribute('data-bs-theme', 'dark');
@@ -73,7 +68,6 @@ if (religionSelect) {
         document.documentElement.setAttribute('data-bs-theme', theme);
       }
     };
-  
     setTheme(getPreferredTheme());
   
     const el = document.querySelector('.theme-icon-active');
@@ -86,7 +80,6 @@ if (religionSelect) {
         document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
           element.classList.remove('active');
         });
-  
         btnToActive.classList.add('active');
         activeThemeIcon.setAttribute('href', svgOfActiveBtn);
       };
@@ -110,11 +103,7 @@ if (religionSelect) {
     }
   
     // ==========================
-    // Populate Years
-    // ==========================
-    
-    // ==========================
-    // Live Validation Setup
+    // Live Field Validation
     // ==========================
     const emailInput = document.getElementById('email');
     const phoneInput = document.getElementById('phoneNumber');
@@ -124,22 +113,14 @@ if (religionSelect) {
     if (emailInput) {
       emailInput.addEventListener('input', () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(emailInput.value)) {
-          emailInput.classList.add('is-invalid');
-        } else {
-          emailInput.classList.remove('is-invalid');
-        }
+        emailInput.classList.toggle('is-invalid', !emailRegex.test(emailInput.value));
       });
     }
   
     if (phoneInput) {
       phoneInput.addEventListener('input', () => {
         const phoneRegex = /^[0-9]{10,15}$/;
-        if (!phoneRegex.test(phoneInput.value)) {
-          phoneInput.classList.add('is-invalid');
-        } else {
-          phoneInput.classList.remove('is-invalid');
-        }
+        phoneInput.classList.toggle('is-invalid', !phoneRegex.test(phoneInput.value));
       });
     }
   
@@ -150,20 +131,8 @@ if (religionSelect) {
   
     function validatePasswords() {
       const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
-  
-      // Check password strength
-      if (!strongPasswordRegex.test(passwordInput.value)) {
-        passwordInput.classList.add('is-invalid');
-      } else {
-        passwordInput.classList.remove('is-invalid');
-      }
-  
-      // Check passwords match
-      if (passwordInput.value !== confirmPasswordInput.value || confirmPasswordInput.value === '') {
-        confirmPasswordInput.classList.add('is-invalid');
-      } else {
-        confirmPasswordInput.classList.remove('is-invalid');
-      }
+      passwordInput.classList.toggle('is-invalid', !strongPasswordRegex.test(passwordInput.value));
+      confirmPasswordInput.classList.toggle('is-invalid', passwordInput.value !== confirmPasswordInput.value || confirmPasswordInput.value === '');
     }
   
     // ==========================
@@ -171,48 +140,44 @@ if (religionSelect) {
     // ==========================
     const form = document.querySelector('form');
     if (form) {
-      form.addEventListener('submit', function(event) {
-        const firstName = document.querySelector('input[placeholder="First Name"]');
-        const lastName = document.querySelector('input[placeholder="Last Name"]');
-        const month = document.getElementById('monthSelect');
-        const day = document.getElementById('daySelect');
-        const year = document.getElementById('yearSelect');
+      form.addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent real submit now
+        event.stopPropagation();
+  
+        const requiredFields = [
+          'firstName', 'lastName', 'organizationName', 'monthSelect', 'daySelect', 'yearSelect'
+        ];
   
         let formIsValid = true;
   
-        if (!firstName.value.trim()) {
-          firstName.classList.add('is-invalid');
+        requiredFields.forEach(id => {
+          const input = document.getElementById(id);
+          if (input && !input.value.trim()) {
+            input.classList.add('is-invalid');
+            formIsValid = false;
+          } else if (input) {
+            input.classList.remove('is-invalid');
+          }
+        });
+  
+        if (!emailInput || emailInput.classList.contains('is-invalid') ||
+            !passwordInput || passwordInput.classList.contains('is-invalid') ||
+            !confirmPasswordInput || confirmPasswordInput.classList.contains('is-invalid')) {
           formIsValid = false;
-        } else {
-          firstName.classList.remove('is-invalid');
         }
   
-        if (!lastName.value.trim()) {
-          lastName.classList.add('is-invalid');
-          formIsValid = false;
+        if (formIsValid) {
+          // ✅ Success — redirect to profile page
+          window.location.href = 'my-profile.html';
         } else {
-          lastName.classList.remove('is-invalid');
-        }
-  
-        if (!month.value || !day.value || !year.value) {
-          month.classList.add('is-invalid');
-          day.classList.add('is-invalid');
-          year.classList.add('is-invalid');
-          formIsValid = false;
-        } else {
-          month.classList.remove('is-invalid');
-          day.classList.remove('is-invalid');
-          year.classList.remove('is-invalid');
-        }
-  
-        if (!formIsValid) {
-          event.preventDefault();
-          event.stopPropagation();
+          // ❌ Show user errors but stay on page
+          console.log('Form validation failed.');
         }
       });
     }
-  
   });
+  
+  // Toggle Tax ID Field
   function toggleTaxId(is501c3) {
     const taxIdField = document.getElementById('taxIdField');
     const btn501Yes = document.getElementById('btn501Yes');
@@ -228,9 +193,4 @@ if (religionSelect) {
       btn501No.classList.add('active');
     }
   }
-  
-  
-  // ==========================
-  // Update Days Based on Month and Year
-  // ==========================
   
