@@ -1132,7 +1132,10 @@ Header END -->
                       </div>
                       <!-- Card footer -->
                       <div class="card-footer p-2 border-0">
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message"> <i class="bi bi-chat-left-text"></i> </button>
+                        <button class="btn btn-sm btn-primary open-chat-btn" title="Send message">
+                          <i class="bi bi-chat-left-text"></i>
+                        </button>
+                        
                         <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove friend"> <i class="bi bi-person-x"></i> </button>
                       </div>
                     </div>
@@ -1152,7 +1155,10 @@ Header END -->
                       </div>
                       <!-- Card footer -->
                       <div class="card-footer p-2 border-0">
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message"> <i class="bi bi-chat-left-text"></i> </button>
+                        <button class="btn btn-sm btn-primary open-chat-btn" title="Send message">
+                          <i class="bi bi-chat-left-text"></i>
+                        </button>
+                        
                         <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove friend"> <i class="bi bi-person-x"></i> </button>
                       </div>
                     </div>
@@ -1172,7 +1178,10 @@ Header END -->
                       </div>
                       <!-- Card footer -->
                       <div class="card-footer p-2 border-0">
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message"> <i class="bi bi-chat-left-text"></i> </button>
+                        <button class="btn btn-sm btn-primary open-chat-btn" title="Send message">
+                          <i class="bi bi-chat-left-text"></i>
+                        </button>
+                        
                         <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove friend"> <i class="bi bi-person-x"></i> </button>
                       </div>
                     </div>
@@ -1192,7 +1201,10 @@ Header END -->
                       </div>
                       <!-- Card footer -->
                       <div class="card-footer p-2 border-0">
-                        <button class="btn btn-sm btn-primary" data-bs-toggle="tooltip" data-bs-placement="top" title="Send message"> <i class="bi bi-chat-left-text"></i> </button>
+                        <button class="btn btn-sm btn-primary open-chat-btn" title="Send message">
+                          <i class="bi bi-chat-left-text"></i>
+                        </button>
+                        
                         <button class="btn btn-sm btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Remove friend"> <i class="bi bi-person-x"></i> </button>
                       </div>
                     </div>
@@ -1496,6 +1508,32 @@ Header END -->
   </div>
 </div>
 <!-- Modal create events END -->
+
+
+<!-- Chat toast START -->
+<div id="chatToast" class="toast position-fixed bottom-0 end-0 m-3" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false" style="z-index: 1080;">
+  <div class="toast-header bg-mode d-flex justify-content-between">
+    <h6 class="mb-0">New message</h6>
+    <button class="btn btn-secondary-soft-hover py-1 px-2" data-bs-dismiss="toast" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div class="toast-body collapse show" id="collapseChat">
+    <form>
+      <div class="input-group mb-3">
+        <span class="input-group-text border-0">To</span>
+        <input class="form-control" type="text" placeholder="Type a name">
+      </div>
+    </form>
+    <div class="h-200px"></div>
+    <div class="d-sm-flex align-items-end">
+      <textarea class="form-control mb-sm-0 mb-3" placeholder="Type a message" rows="1"></textarea>
+      <button class="btn btn-sm btn-danger-soft ms-sm-2"><i class="fa-solid fa-face-smile fs-6"></i></button>
+      <button class="btn btn-sm btn-secondary-soft ms-2"><i class="fa-solid fa-paperclip fs-6"></i></button>
+      <button class="btn btn-sm btn-primary ms-2"><i class="fa-solid fa-paper-plane fs-6"></i></button>
+    </div>
+  </div>
+</div>
+<!-- Chat toast END -->
+
 
 <!-- =======================
 JS libraries, plugins and custom scripts -->

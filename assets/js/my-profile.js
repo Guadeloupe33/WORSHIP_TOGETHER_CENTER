@@ -13,10 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const storedTheme = localStorage.getItem('theme');
   
 	const getPreferredTheme = () => {
-	  if (storedTheme) {
-		return storedTheme;
-	  }
-	  return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light';
+	  return storedTheme || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light');
 	};
   
 	const setTheme = (theme) => {
@@ -30,26 +27,19 @@ document.addEventListener('DOMContentLoaded', function () {
 	const showActiveTheme = (theme) => {
 	  const activeThemeIcon = document.querySelector('.theme-icon-active use');
 	  const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
-	  
+  
 	  if (btnToActive && activeThemeIcon) {
 		const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use')?.getAttribute('href');
-		
-		document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-		  element.classList.remove('active');
-		});
   
+		document.querySelectorAll('[data-bs-theme-value]').forEach(el => el.classList.remove('active'));
 		btnToActive.classList.add('active');
-		if (svgOfActiveBtn) {
-		  activeThemeIcon.setAttribute('href', svgOfActiveBtn);
-		}
+		if (svgOfActiveBtn) activeThemeIcon.setAttribute('href', svgOfActiveBtn);
 	  }
 	};
   
-	// Initialize
 	setTheme(getPreferredTheme());
 	showActiveTheme(getPreferredTheme());
   
-	// Listen for system theme changes
 	window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
 	  if (storedTheme !== 'light' && storedTheme !== 'dark') {
 		setTheme(getPreferredTheme());
@@ -57,7 +47,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	  }
 	});
   
-	// Theme toggle buttons
 	document.querySelectorAll('[data-bs-theme-value]').forEach(toggle => {
 	  toggle.addEventListener('click', () => {
 		const theme = toggle.getAttribute('data-bs-theme-value');
@@ -67,5 +56,18 @@ document.addEventListener('DOMContentLoaded', function () {
 	  });
 	});
   
+	// ==========================
+	// Chat Toast Activation
+	// ==========================
+	const chatToastEl = document.getElementById('chatToast');
+	if (chatToastEl) {
+	  const chatToast = new bootstrap.Toast(chatToastEl, { autohide: false });
+  
+	  document.querySelectorAll('.open-chat-btn').forEach(btn => {
+		btn.addEventListener('click', () => {
+		  chatToast.show();
+		});
+	  });
+	}
   });
   
