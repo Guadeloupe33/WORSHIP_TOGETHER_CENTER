@@ -501,7 +501,7 @@ Header START -->
                   
                   <!-- Title START -->
                   <div class="card-header border-0 pb-0">
-                    <h1 class="h5 card-title">Account Settings</h1>
+                    <h1 class="h5 card-title">Profile Settings</h1>
                     <p class="mb-0">He moonlights difficult engrossed it, sportsmen. Interested has all Devonshire difficulty gay assistance joy. Unaffected at ye of compliment alteration to.</p>
                   </div>
                   <!-- Card header START -->
@@ -534,7 +534,7 @@ Header START -->
                         <label class="form-label">Birthday </label>
                         <input type="text" class="form-control flatpickr" value="12/12/1990">
                       </div>
-                      <!-- Allow checkbox -->
+ <!-- Allow checkbox -->
                       <div class="col-12">
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" value="" id="allowChecked" checked>
@@ -542,30 +542,116 @@ Header START -->
                             Allow anyone to add you to their team
                           </label>
                         </div>
+                      </div>         
+                     <!-- Default Organization Display and Role Section -->
+
+                   
+                     
+                        <div class="col-12">
+                          <label class="form-label">Search Religious Organization</label>
+                          <div class="input-group">
+                            <input type="text" class="form-control" placeholder="Search for a church, mosque, or religious group" id="orgSearchInput">
+                            <button class="btn btn-primary" type="button" id="orgSearchBtn">Search</button>
+                          </div>
+                          <div id="orgValidation" class="text-danger fw-bold mt-2" style="display:none;">Please enter an organization name before searching.</div>
+                          <small class="text-muted">Find and set your default church, mosque, or religious organization.</small>
+                          <div id="orgSearchResults" class="mt-3"></div>
+                        </div>
+
+ <!-- Phone number -->
+ <div class="col-sm-6" id="phoneContainer">
+  <label class="form-label">Phone number</label>
+  <div class="input-group phone-entry">
+    <input type="tel" class="form-control phone-input" placeholder="(678) 324-1251">
+    <select class="form-select ms-2" style="max-width: 150px;">
+      <option value="Home">Home</option>
+      <option value="Work">Work</option>
+      <option value="Cell">Cell</option>
+    </select>
+    <button class="btn btn-outline-danger ms-2 remove-btn" type="button">Remove</button>
+  </div>
+  <div class="invalid-feedback">Please enter a valid phone number.</div>
+  <a class="btn btn-sm btn-dashed rounded mt-2" href="#" id="addPhoneBtn"> <i class="bi bi-plus-circle-dotted me-1"></i>Add new phone number</a>
+</div>
+                     
+                     
+                   
+                      
+                    <!-- Email -->
+                    <div class="col-sm-6" id="emailContainer">
+                      <label class="form-label">Email</label>
+                      <div class="input-group email-entry">
+                        <input type="email" class="form-control email-input" placeholder="sam@webestica.com">
+                        <select class="form-select ms-2" style="max-width: 150px;">
+                          <option value="Personal">Personal</option>
+                          <option value="Organization">Organization</option>
+                        </select>
+                        <button class="btn btn-outline-danger ms-2 remove-btn" type="button">Remove</button>
                       </div>
-                      <!-- Phone number -->
+                      <div class="invalid-feedback">Please enter a valid email address.</div>
+                      <a class="btn btn-sm btn-dashed rounded mt-2" href="#" id="addEmailBtn"> <i class="bi bi-plus-circle-dotted me-1"></i>Add new email address</a>
+                    </div>
+                      <!-- Address -->
+            <div class="col-12">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-control" placeholder="Enter full address">
+              <a class="btn btn-sm btn-dashed rounded mt-2" href="#!"> <i class="bi bi-plus-circle-dotted me-1"></i>Add new mailing address</a>
+            </div>
+            <div class="col-12 mt-4">
+              <label class="form-label">Gender</label>
+              <select class="form-select" id="genderSelect">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Non-binary">Non-binary</option>
+                <option value="Transgender">Transgender</option>
+                <option value="Intersex">Intersex</option>
+                <option value="Prefer not to say">Prefer not to say</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <!-- Job function -->
+            <div class="col-12">
+              <label class="form-label">Job Function</label>
+              <input type="text" class="form-control" placeholder="e.g. Software Developer, Pastor, Imam">
+            </div>
+            <!-- Default Place of Worship -->
+            
                       <div class="col-sm-6">
-                        <label class="form-label">Phone number</label>
-                        <input type="text" class="form-control" placeholder="" value="(678) 324-1251">
-                        <!-- Add new number -->
-                        <a class="btn btn-sm btn-dashed rounded mt-2" href="#!"> <i class="bi bi-plus-circle-dotted me-1"></i>Add new phone number</a>
+                        <label class="form-label">Religion</label>
+                        <select class="form-select" id="religionSelect">
+                          <option value="">Select Religion</option>
+                          <option value="Christianity">Christianity</option>
+                          <option value="Islam">Islam</option>
+                          <option value="Hinduism">Hinduism</option>
+                          <option value="Buddhism">Buddhism</option>
+                          <option value="Sikhism">Sikhism</option>
+                          <option value="Judaism">Judaism</option>
+                          <option value="Taoism">Taoism</option>
+                          <option value="Bahai">Bahá'í Faith</option>
+                          <option value="Jainism">Jainism</option>
+                          <option value="Shinto">Shinto</option>
+                          <option value="Other">Other</option>
+                        </select>
                       </div>
-                      <!-- Phone number -->
-                      <div class="col-sm-6">
-                        <label class="form-label">Email</label>
-                        <input type="text" class="form-control" placeholder="" value="sam@webestica.com">
-                        <!-- Add new email -->
-                        <a class="btn btn-sm btn-dashed rounded mt-2" href="#!"> <i class="bi bi-plus-circle-dotted me-1"></i>Add new email address</a>
+                      
+                      <div class="col-sm-6" id="denominationDiv">
+                        <label class="form-label">Denomination</label>
+                        <select class="form-select" id="denominationSelect">
+                          <option selected disabled>Select Denomination</option>
+                        </select>
                       </div>
+                      
+
                       <!-- Page information -->
                       <div class="col-12">
-                        <label class="form-label">Overview</label>
+                        <label class="form-label">About me</label>
                         <textarea class="form-control" rows="4" placeholder="Description (Required)">Interested has all Devonshire difficulty gay assistance joy. Handsome met debating sir dwelling age material. As style lived he worse dried. Offered related so visitors we private removed. Moderate do subjects to distance.</textarea>
                         <small>Character limit: 300</small>
                       </div>
                       <!-- Button  -->
                       <div class="col-12 text-end">
-                        <button type="submit" class="btn btn-sm btn-primary mb-0">Save changes</button>
+                        <button type="submit" class="btn btn-sm btn-primary mb-0">Update profile</button>
                       </div>
                     </form>
                     <!-- Settings END -->
