@@ -11,7 +11,7 @@ const generateToken = (userId) => {
 };
 
 // @desc    Register new user
-const denominationsList = require('../utils/denominations'); // 👈 Import this at the top
+
 
 exports.registerUser = async (req, res) => {
   try {
@@ -157,6 +157,33 @@ exports.updateProfile = async (req, res) => {
       website: updatedUser.website,
       token: generateToken(updatedUser._id),
     });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error', error: err.message });
+  }
+};
+// @desc    Change user password
+exports.changePassword = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({ message: 'Both current and new passwords are required' });
+    }
+
+    const isMatch = await user.matchPassword(currentPassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Current password is incorrect' });
+    }
+
+    user.password = newPassword; // Will be hashed on save
+    await user.save();
+
+    res.json({ message: 'Password updated successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Server error', error: err.message });
   }

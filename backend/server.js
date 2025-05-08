@@ -16,6 +16,9 @@ app.use(cors());
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/profile', require('./routes/profile')); // <-- now after app is defined
+const path = require('path');
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
+
 
 // Start server
 const PORT = process.env.PORT || 4000;

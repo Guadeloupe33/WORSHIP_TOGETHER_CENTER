@@ -22,17 +22,44 @@ const userSchema = new mongoose.Schema({
     type: String,
     enum: ['personal', 'organization'],
     default: 'personal'
+  },
+  religion: {
+    type: String,
+    enum: [
+      'Christianity', 'Islam', 'Hinduism', 'Buddhism', 'Judaism',
+      'Sikhism', 'Baháʼí', 'Jainism', 'Shinto', 'Taoism'
+    ]
+  },
+  denomination: {
+    type: String,
+    trim: true
+  },
+  organizationName: {
+    type: String,
+    trim: true
+  },
+  mission: {
+    type: String,
+    trim: true
+  },
+  website: {
+    type: String,
+    trim: true
+  },
+  photo: {
+    type: String,
+    default: ''
   }
 }, { timestamps: true });
 
-// Hash password before saving
+// Hash password before save
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-// Method to compare passwords
+// Password match method
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
