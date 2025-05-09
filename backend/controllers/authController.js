@@ -42,7 +42,8 @@ exports.registerUser = async (req, res) => {
         });
       }
     }
-
+ // ✅ Handle uploaded photo
+ const photo = req.file ? req.file.filename : '';
     // Create new user
     const user = await User.create({
       name,
@@ -102,8 +103,25 @@ exports.getProfile = async (req, res) => {
     return res.status(401).json({ message: 'Not authorized' });
   }
 
-  res.status(200).json(req.user);
+  const fullPhotoUrl = req.user.photo
+    ? `${req.protocol}://${req.get('host')}/uploads/${req.user.photo}`
+    : '';
+
+  res.status(200).json({
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+    accountType: req.user.accountType,
+    religion: req.user.religion,
+    denomination: req.user.denomination,
+    organizationName: req.user.organizationName,
+    mission: req.user.mission,
+    website: req.user.website,
+    photo: fullPhotoUrl
+  });
 };
+
+
 
 
 exports.updateProfile = async (req, res) => {
