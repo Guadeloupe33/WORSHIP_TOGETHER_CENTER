@@ -54,7 +54,8 @@ exports.registerUser = async (req, res) => {
       denomination,
       organizationName,
       mission,
-      website
+      website,
+      photo // ✅ Save the filename of the uploaded photo
     });
 
     res.status(201).json({
