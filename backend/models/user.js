@@ -30,6 +30,12 @@ const userSchema = new mongoose.Schema({
       'Sikhism', 'Baháʼí', 'Jainism', 'Shinto', 'Taoism'
     ]
   },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Custom'],
+    default: 'Custom'
+  },
+  
   denomination: {
     type: String,
     trim: true
