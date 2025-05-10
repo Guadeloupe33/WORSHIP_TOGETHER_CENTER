@@ -3,6 +3,10 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 
+
+
+
+
 dotenv.config();
 const app = express();
 
@@ -11,7 +15,12 @@ connectDB();
 
 // Middleware
 app.use(express.json());
-app.use(cors());
+
+app.use(cors({
+    origin: 'http://localhost:5502', // or your frontend's actual port
+    credentials: true
+  }));
+  
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
