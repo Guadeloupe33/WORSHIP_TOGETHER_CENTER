@@ -24,7 +24,10 @@ exports.registerUser = async (req, res) => {
       denomination,
       organizationName,
       mission,
-      website
+      website,
+      taxId,
+      is501c3,      // ✅ added
+  
     } = req.body;
 
     // Check if user already exists
@@ -55,7 +58,9 @@ exports.registerUser = async (req, res) => {
       organizationName,
       mission,
       website,
-      photo // ✅ Save the filename of the uploaded photo
+      photo, // ✅ Save the filename of the uploaded photo
+      taxId,        // ✅ added
+      is501c3       // ✅ added
     });
 
     res.status(201).json({

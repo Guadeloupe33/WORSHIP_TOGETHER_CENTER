@@ -55,7 +55,10 @@ const userSchema = new mongoose.Schema({
   photo: {
     type: String,
     default: ''
-  }
+  },
+  taxId: { type: String },         // ✅ Correct format
+  is501c3: { type: Boolean }, 
+  
 }, { timestamps: true });
 
 // Hash password before save
