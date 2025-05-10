@@ -117,9 +117,10 @@ exports.getProfile = async (req, res) => {
     organizationName: req.user.organizationName,
     mission: req.user.mission,
     website: req.user.website,
-    photo: fullPhotoUrl
+    photo: fullPhotoUrl // ✅ send full path
   });
 };
+
 
 
 
