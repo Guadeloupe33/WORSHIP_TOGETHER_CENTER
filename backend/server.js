@@ -17,7 +17,7 @@ connectDB();
 app.use(express.json());
 
 app.use(cors({
-    origin: 'http://localhost:5502', // or your frontend's actual port
+    origin: ['http://localhost:5502', 'http://127.0.0.1:5502'],
     credentials: true
   }));
   
