@@ -6,6 +6,20 @@ document.addEventListener('DOMContentLoaded', function () {
   if (yearSpan) {
     yearSpan.textContent = new Date().getFullYear();
   }
+// ==========================
+// Initialize Password Meter
+// ==========================
+if (typeof window.pswMeter !== 'undefined' && document.getElementById('password')) {
+  window.pswMeter.init({
+    id: '#password',            // matches your input ID
+    height: 6,
+    borderRadius: 4,
+    pswMinLength: 8,
+    showPasswordToggle: true,
+    box: '#pswmeter',           // optional, only if using custom container
+    messageBox: '#pswmeter-message'
+  });
+}
 
   // ==========================
   // Activate Bootstrap Popover
@@ -116,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ==========================
-  // Populate Years
+  // Populate Years yes
   // ==========================
   const yearSelect = document.getElementById('yearSelect');
   if (yearSelect) {
@@ -165,26 +179,42 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   // ==========================
-  // Form Submit Validation
+  // Handle Photo Preview
   // ==========================
-  const form = document.querySelector('form');
+  const photoInput = document.getElementById('photoInput');
+  if (photoInput) {
+    photoInput.addEventListener('change', function (e) {
+      const file = e.target.files[0];
+      const preview = document.getElementById('photoPreview');
+
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+    });
+  }
+
+    // ==========================
+  // Form Submit Validation + Backend Submit
+  // ==========================
+  const form = document.getElementById('signupForm'); // ✅ FIXED
+
   if (form) {
     form.addEventListener('submit', function (event) {
-      event.preventDefault(); // Prevent normal submit
+      event.preventDefault();
       event.stopPropagation();
 
-      const requiredFields = [
-        'firstName', 'lastName', 'monthSelect', 'daySelect', 'yearSelect'
-      ];
-
+      const requiredFields = ['name', 'lastName', 'birthMonth', 'birthDay', 'birthYear'];
       let formIsValid = true;
 
       requiredFields.forEach(id => {
-        const input = document.getElementById(id);
+        const input = document.getElementsByName(id)[0] || document.getElementById(id);
         if (input && !input.value.trim()) {
           input.classList.add('is-invalid');
           formIsValid = false;
-        } else if (input) {
+        } else {
           input.classList.remove('is-invalid');
         }
       });
@@ -196,21 +226,41 @@ document.addEventListener('DOMContentLoaded', function () {
       }
 
       if (formIsValid) {
-        // ✅ Success — redirect to profile page
-        window.location.href = 'my-profile.html';
+        const formData = new FormData(form);
+        console.log('📤 Submitting form to backend...');
+
+        fetch('http://localhost:4000/api/auth/register', {
+          method: 'POST',
+          body: formData
+        })
+          .then(res => {
+            console.log('🔁 Received response:', res);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return res.json();
+          })
+          .then(data => {
+            console.log('✅ Registered:', data);
+            window.location.href = 'my-profile.html';
+          })
+          .catch(error => {
+            console.error('❌ Registration failed:', error);
+            alert('Something went wrong. Please try again.');
+          });
       } else {
-        console.log('Form validation failed.');
+        console.warn('⚠️ Form validation failed.');
       }
     });
+  } else {
+    console.error('❌ signupForm not found in DOM');
   }
-});
-
+}); 
+  
 // ==========================
 // Update Days Based on Month and Year
 // ==========================
 function updateDays() {
-  const month = parseInt(document.getElementById('monthSelect').value);
-  const year = parseInt(document.getElementById('yearSelect').value) || new Date().getFullYear();
+  const month = parseInt(document.getElementById('monthSelect')?.value);
+  const year = parseInt(document.getElementById('yearSelect')?.value) || new Date().getFullYear();
   const daySelect = document.getElementById('daySelect');
 
   if (!month || !daySelect) {

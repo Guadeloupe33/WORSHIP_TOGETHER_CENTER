@@ -177,20 +177,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
   
-  // Toggle Tax ID Field
   function toggleTaxId(is501c3) {
     const taxIdField = document.getElementById('taxIdField');
     const btn501Yes = document.getElementById('btn501Yes');
     const btn501No = document.getElementById('btn501No');
+    const is501c3Input = document.getElementById('is501c3'); // hidden input
   
     if (is501c3) {
       taxIdField.style.display = 'block';
       btn501Yes.classList.add('active');
       btn501No.classList.remove('active');
+      is501c3Input.value = 'true';
     } else {
       taxIdField.style.display = 'none';
       btn501Yes.classList.remove('active');
       btn501No.classList.add('active');
+      is501c3Input.value = 'false';
     }
   }
   

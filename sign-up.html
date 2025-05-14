@@ -51,28 +51,32 @@
 
 
 
-          <form class="mt-4">
+		  <form id="signupForm" enctype="multipart/form-data">
+
+
   
   <!-- First Name -->
   <div class="mb-3 input-group-lg">
-    <input type="text" class="form-control" placeholder="First Name" required>
+    <input type="text" class="form-control" name="name" placeholder="First Name" required>
+
   </div>
 
   <!-- Last Name -->
   <div class="mb-3 input-group-lg">
-    <input type="text" class="form-control" placeholder="Last Name" required>
+	<input type="text" class="form-control" name="lastName" placeholder="Last Name" required>
   </div>
 
   <!-- Email -->
   <div class="mb-3 input-group-lg">
-	<input type="email" class="form-control" id="email" placeholder="Enter email" required>
+	<input type="email" class="form-control" id="email" name="email" placeholder="Enter email" required>
+
 	<small class="invalid-feedback">Please enter a valid email address.</small>
   </div>
   
   
   <!-- Phone Number -->
   <div class="mb-3 input-group-lg">
-	<input type="tel" class="form-control" id="phoneNumber" placeholder="Phone Number" required>
+	<input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" placeholder="Phone Number" required>
 	<small class="invalid-feedback">Please enter a valid phone number (10-15 digits).</small>
   </div>
   
@@ -82,54 +86,62 @@
   <!-- Birthday -->
   <!-- Birthday -->
 <!-- Birthday -->
-<div class="mb-3 input-group">
-	<!-- Month -->
-	<select class="form-select" id="monthSelect" onchange="updateDays()" required>
-	  <option selected disabled value="">Month</option>  <!-- ADD value="" -->
-	  <option value="1">January</option>
-	  <option value="2">February</option>
-	  <option value="3">March</option>
-	  <option value="4">April</option>
-	  <option value="5">May</option>
-	  <option value="6">June</option>
-	  <option value="7">July</option>
-	  <option value="8">August</option>
-	  <option value="9">September</option>
-	  <option value="10">October</option>
-	  <option value="11">November</option>
-	  <option value="12">December</option>
-	</select>
+<div class="mb-3">
+	<label class="form-label">Birthday</label>
+	<div class="row g-2">
+	  <!-- Month -->
+	  <div class="col-md-4">
+		<select class="form-select" id="monthSelect" name="birthMonth" onchange="updateDays()" required>
+		  <option selected disabled value="">Month</option>
+		  <option value="1">January</option>
+		  <option value="2">February</option>
+		  <option value="3">March</option>
+		  <option value="4">April</option>
+		  <option value="5">May</option>
+		  <option value="6">June</option>
+		  <option value="7">July</option>
+		  <option value="8">August</option>
+		  <option value="9">September</option>
+		  <option value="10">October</option>
+		  <option value="11">November</option>
+		  <option value="12">December</option>
+		</select>
+	  </div>
   
-	<!-- Day -->
-	<select class="form-select" id="daySelect" required>
-	  <option selected disabled value="">Day</option> <!-- ADD value="" -->
-	</select>
+	  <!-- Day -->
+	  <div class="col-md-4">
+		<select class="form-select" id="daySelect" name="birthDay" required>
+		  <option selected disabled value="">Day</option>
+		</select>
+	  </div>
   
-	<!-- Year -->
-	<select class="form-select" id="yearSelect" onchange="updateDays()" required>
-	  <option selected disabled value="">Year</option> <!-- ADD value="" -->
-	  <!-- JS will populate -->
-	</select>
+	  <!-- Year -->
+	  <div class="col-md-4">
+		<select class="form-select" id="yearSelect" name="birthYear" onchange="updateDays()" required>
+		  <option selected disabled value="">Year</option>
+		</select>
+	  </div>
+	</div>
   </div>
+  
   
   
   
 
   <!-- Gender -->
  <!-- Gender -->
-<div class="mb-3 text-center">
-	<label class="form-label d-block">Gender</label>
-	<div class="d-flex justify-content-center gap-3 mt-2" id="genderButtons">
-	  <button type="button" class="btn btn-outline-primary gender-button" data-gender="Female" onclick="selectGender(this)">Female</button>
-	  <button type="button" class="btn btn-outline-primary gender-button" data-gender="Male" onclick="selectGender(this)">Male</button>
-	  <button type="button" class="btn btn-outline-primary gender-button" data-gender="Custom" onclick="selectGender(this)">Custom</button>
-	</div>
+ <div class="d-flex justify-content-center gap-3 mt-2" id="genderButtons">
+	<button type="button" class="btn btn-outline-primary gender-button" data-gender="Female">Female</button>
+	<button type="button" class="btn btn-outline-primary gender-button" data-gender="Male">Male</button>
+	<button type="button" class="btn btn-outline-primary gender-button" data-gender="Custom">Custom</button>
+  </div>
+  
 	<input type="hidden" id="genderInput" name="gender">
   </div>
   
 <!-- Religion -->
 <div class="mb-3">
-	<select class="form-select" id="religionSelect" onchange="populateDenominations()" required>
+<select class="form-select" id="religionSelect" required>	
 	  <option selected disabled>Select Religion</option>
 	  <option value="Christianity">Christianity</option>
 	  <option value="Islam">Islam</option>
@@ -156,7 +168,7 @@
  <!-- New password -->
 <div class="mb-3 position-relative">
 	<div class="input-group input-group-lg">
-	  <input class="form-control fakepassword" type="password" id="password" placeholder="Enter new password" required>
+		<input class="form-control fakepassword" type="password" id="password" name="password" placeholder="Enter new password" required>
 	  <span class="input-group-text p-0">
 		<i class="fakepasswordicon fa-solid fa-eye-slash cursor-pointer p-2 w-40px"></i>
 	  </span>
@@ -172,14 +184,14 @@
   
   <!-- Confirm password -->
   <div class="mb-3 input-group-lg">
-	<input class="form-control" type="password" id="confirmPassword" placeholder="Confirm password" required>
+	<input class="form-control" type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
 	<small class="invalid-feedback">Passwords do not match.</small>
   </div>
   
 
   <!-- Keep me signed in -->
   <div class="mb-3 text-start">
-    <input type="checkbox" class="form-check-input" id="keepsingnedCheck">
+    <input type="checkbox" class="form-check-input" id="keepsingnedCheck" name="keepSignedIn">
     <label class="form-check-label" for="keepsingnedCheck">Keep me signed in</label>
   </div>
 
@@ -272,6 +284,7 @@ JS libraries, plugins and custom scripts -->
 <!-- Theme Functions -->
 <script src="assets/js/functions.js"></script>
 <script src="assets/js/sign-up.js"></script>
+
 
 </body>
 </html>

@@ -459,7 +459,8 @@ var e = {
 						placeholderValue: placeHolderVal,
 						maxItemCount: maxItemCount,
 						searchEnabled: searchEnabled,
-						position: position
+						position: position,
+						allowHTML: true //  Suppresses warning and ensures future compatibility
 				});
 			});
 		}
@@ -566,7 +567,7 @@ var e = {
 					inline: inline,
 					animate: "false",
 					position: "top",
-					dateFormat: "D-m-Y", //Check supported characters here: https://flatpickr.js.org/formatting/
+					dateFormat: "m/d/y", //Check supported characters here: https://flatpickr.js.org/formatting/
 					disableMobile: "true"
 				});
 
@@ -666,7 +667,7 @@ var e = {
 		if (e.isVariableDefined(e.select('#pswmeter'))) {
 			const myPassMeter = passwordStrengthMeter({
 				containerElement: '#pswmeter',
-				passwordInput: '#psw-input',
+				passwordInput: '#password',
 				showMessage: true,
 				messageContainer: '#pswmeter-message',
 				messagesList: [
