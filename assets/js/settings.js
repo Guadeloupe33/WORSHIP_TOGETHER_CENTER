@@ -257,4 +257,15 @@ document.addEventListener('DOMContentLoaded', function () {
     wrapper.appendChild(removeBtn);
     container.insertBefore(wrapper, document.getElementById('addEmailBtn'));
   });
+  // ==========================
+// Manually Initialize Tabs
+// ==========================
+document.querySelectorAll('[data-bs-toggle="tab"]').forEach(tab => {
+  tab.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = new bootstrap.Tab(this);
+    target.show();
+  });
+});
+
 });
