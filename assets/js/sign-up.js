@@ -290,13 +290,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
       // Ensure religion/denomination/gender have proper name attributes in HTML
       // (religionSelect name="religion"; denominationSelect name="denomination"; genderInput name="gender")
+      const API_BASE = 'http://127.0.0.1:5500'; // your Node server
 
       console.log('📤 Submitting form to backend...');
       try {
-        const res = await fetch('http://localhost:4000/api/auth/register', {
+        const res = await fetch(`${API_BASE}/api/auth/register`, {
           method: 'POST',
-          body: formData
+          credentials: 'include',      // important if backend sets cookies
+          body: formData               // keep FormData if you plan file upload
         });
+        
 
         const text = await res.text();
         let payload;
