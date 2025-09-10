@@ -1,3 +1,17 @@
+/**
+ * WORSHIP TOGETHER CENTER — Signup Page Logic (complete.js)
+ * - Footer year
+ * - Password strength meter
+ * - Bootstrap popovers
+ * - Gender buttons -> hidden input
+ * - Religion -> Denomination dependency
+ * - Theme switching (light/dark/auto)
+ * - DOB selects with dynamic days
+ * - Live field validation
+ * - Photo preview
+ * - Submit to backend (FormData + birthDate ISO)
+ */
+
 document.addEventListener('DOMContentLoaded', function () {
   // ==========================
   // Set Footer Year
@@ -6,20 +20,21 @@ document.addEventListener('DOMContentLoaded', function () {
   if (yearSpan) {
     yearSpan.textContent = new Date().getFullYear();
   }
-// ==========================
-// Initialize Password Meter
-// ==========================
-if (typeof window.pswMeter !== 'undefined' && document.getElementById('password')) {
-  window.pswMeter.init({
-    id: '#password',            // matches your input ID
-    height: 6,
-    borderRadius: 4,
-    pswMinLength: 8,
-    showPasswordToggle: true,
-    box: '#pswmeter',           // optional, only if using custom container
-    messageBox: '#pswmeter-message'
-  });
-}
+
+  // ==========================
+  // Initialize Password Meter
+  // ==========================
+  if (typeof window.pswMeter !== 'undefined' && document.getElementById('password')) {
+    window.pswMeter.init({
+      id: '#password',
+      height: 6,
+      borderRadius: 4,
+      pswMinLength: 8,
+      showPasswordToggle: true,
+      box: '#pswmeter',
+      messageBox: '#pswmeter-message'
+    });
+  }
 
   // ==========================
   // Activate Bootstrap Popover
@@ -33,21 +48,21 @@ if (typeof window.pswMeter !== 'undefined' && document.getElementById('password'
   // Handle Gender Button Click
   // ==========================
   const genderButtons = document.querySelectorAll('.gender-button');
-  const genderInput = document.getElementById('genderInput');
+  const genderInput = document.getElementById('genderInput'); // <input type="hidden" name="gender" id="genderInput">
   genderButtons.forEach(button => {
     button.addEventListener('click', function () {
       genderButtons.forEach(btn => btn.classList.remove('active'));
       this.classList.add('active');
-      if (genderInput) genderInput.value = this.getAttribute('data-gender');
+      if (genderInput) genderInput.value = this.getAttribute('data-gender') || '';
     });
   });
 
   // ==========================
   // Handle Religion and Denomination
   // ==========================
-  const religionSelect = document.getElementById('religionSelect');
-  const denominationDiv = document.getElementById('denominationDiv');
-  const denominationSelect = document.getElementById('denominationSelect');
+  const religionSelect = document.getElementById('religionSelect');       // name="religion"
+  const denominationDiv = document.getElementById('denominationDiv');     // wrapper div (for show/hide)
+  const denominationSelect = document.getElementById('denominationSelect'); // name="denomination"
 
   const denominations = {
     "Christianity": ["Catholic", "Protestant", "Eastern Orthodox", "Oriental Orthodox", "Anglican"],
@@ -62,10 +77,10 @@ if (typeof window.pswMeter !== 'undefined' && document.getElementById('password'
     "Taoism": ["Religious Taoism", "Philosophical Taoism"]
   };
 
-  if (religionSelect) {
+  if (religionSelect && denominationDiv && denominationSelect) {
     religionSelect.addEventListener('change', function () {
       const religion = religionSelect.value;
-      denominationSelect.innerHTML = '<option selected disabled>Select Denomination</option>';
+      denominationSelect.innerHTML = '<option selected disabled value="">Select Denomination</option>';
       if (denominations[religion]) {
         denominations[religion].forEach(denomination => {
           const option = document.createElement('option');
@@ -76,6 +91,7 @@ if (typeof window.pswMeter !== 'undefined' && document.getElementById('password'
         denominationDiv.style.display = 'block';
       } else {
         denominationDiv.style.display = 'none';
+        denominationSelect.value = '';
       }
     });
   }
@@ -86,7 +102,7 @@ if (typeof window.pswMeter !== 'undefined' && document.getElementById('password'
   const storedTheme = localStorage.getItem('theme');
   const getPreferredTheme = () => {
     if (storedTheme) return storedTheme;
-    return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'light';
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
   };
   const setTheme = (theme) => {
     if (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches) {
@@ -97,18 +113,16 @@ if (typeof window.pswMeter !== 'undefined' && document.getElementById('password'
   };
   setTheme(getPreferredTheme());
 
-  const el = document.querySelector('.theme-icon-active');
-  if (el) {
+  const themeIconEl = document.querySelector('.theme-icon-active');
+  if (themeIconEl) {
     const showActiveTheme = theme => {
       const activeThemeIcon = document.querySelector('.theme-icon-active use');
       const btnToActive = document.querySelector(`[data-bs-theme-value="${theme}"]`);
-      const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use').getAttribute('href');
-
-      document.querySelectorAll('[data-bs-theme-value]').forEach(element => {
-        element.classList.remove('active');
-      });
+      if (!activeThemeIcon || !btnToActive) return;
+      const svgOfActiveBtn = btnToActive.querySelector('.mode-switch use')?.getAttribute('href');
+      document.querySelectorAll('[data-bs-theme-value]').forEach(element => element.classList.remove('active'));
       btnToActive.classList.add('active');
-      activeThemeIcon.setAttribute('href', svgOfActiveBtn);
+      if (svgOfActiveBtn) activeThemeIcon.setAttribute('href', svgOfActiveBtn);
     };
 
     window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
@@ -130,28 +144,35 @@ if (typeof window.pswMeter !== 'undefined' && document.getElementById('password'
   }
 
   // ==========================
-  // Populate Years yes
+  // Populate Years (last 100 years)
   // ==========================
-  const yearSelect = document.getElementById('yearSelect');
+  const yearSelect = document.getElementById('yearSelect');   // id="yearSelect"
   if (yearSelect) {
     const currentYear = new Date().getFullYear();
     for (let year = currentYear; year >= currentYear - 100; year--) {
       const option = document.createElement('option');
-      option.value = year;
-      option.textContent = year;
+      option.value = String(year);
+      option.textContent = String(year);
       yearSelect.appendChild(option);
     }
   }
 
-  updateDays(); // Initial call
+  // ==========================
+  // Wire updateDays to changes
+  // ==========================
+  const monthSelect = document.getElementById('monthSelect'); // id="monthSelect"
+  const daySelect   = document.getElementById('daySelect');   // id="daySelect"
+  if (monthSelect) monthSelect.addEventListener('change', updateDays);
+  if (yearSelect)  yearSelect.addEventListener('change', updateDays);
+  updateDays(); // Initial render
 
   // ==========================
   // Live Validation Setup
   // ==========================
-  const emailInput = document.getElementById('email');
-  const phoneInput = document.getElementById('phoneNumber');
-  const passwordInput = document.getElementById('password');
-  const confirmPasswordInput = document.getElementById('confirmPassword');
+  const emailInput = document.getElementById('email');                 // name="email"
+  const phoneInput = document.getElementById('phoneNumber');           // name="phoneNumber"
+  const passwordInput = document.getElementById('password');           // name="password"
+  const confirmPasswordInput = document.getElementById('confirmPassword'); // name="confirmPassword"
 
   if (emailInput) {
     emailInput.addEventListener('input', () => {
@@ -168,108 +189,161 @@ if (typeof window.pswMeter !== 'undefined' && document.getElementById('password'
   }
 
   if (passwordInput && confirmPasswordInput) {
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
+    const validatePasswords = () => {
+      passwordInput.classList.toggle('is-invalid', !strongPasswordRegex.test(passwordInput.value));
+      confirmPasswordInput.classList.toggle(
+        'is-invalid',
+        passwordInput.value !== confirmPasswordInput.value || confirmPasswordInput.value === ''
+      );
+    };
     passwordInput.addEventListener('input', validatePasswords);
     confirmPasswordInput.addEventListener('input', validatePasswords);
-  }
-
-  function validatePasswords() {
-    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&^#])[A-Za-z\d@$!%*?&^#]{8,}$/;
-    passwordInput.classList.toggle('is-invalid', !strongPasswordRegex.test(passwordInput.value));
-    confirmPasswordInput.classList.toggle('is-invalid', passwordInput.value !== confirmPasswordInput.value || confirmPasswordInput.value === '');
   }
 
   // ==========================
   // Handle Photo Preview
   // ==========================
-  const photoInput = document.getElementById('photoInput');
+  const photoInput = document.getElementById('photoInput'); // name="photo"
   if (photoInput) {
     photoInput.addEventListener('change', function (e) {
-      const file = e.target.files[0];
+      const file = e.target.files?.[0];
       const preview = document.getElementById('photoPreview');
+      if (!preview) return;
 
       if (file) {
         preview.src = URL.createObjectURL(file);
         preview.style.display = 'block';
       } else {
         preview.style.display = 'none';
+        preview.src = '';
       }
     });
   }
 
-    // ==========================
+  // ==========================
   // Form Submit Validation + Backend Submit
   // ==========================
-  const form = document.getElementById('signupForm'); // ✅ FIXED
+  const form = document.getElementById('signupForm'); // <form id="signupForm" enctype="multipart/form-data">
 
   if (form) {
-    form.addEventListener('submit', function (event) {
+    form.addEventListener('submit', async function (event) {
       event.preventDefault();
       event.stopPropagation();
 
-      const requiredFields = ['name', 'lastName', 'birthMonth', 'birthDay', 'birthYear'];
+      // Update these if your HTML uses different names/ids
+      const requiredByNameOrId = [
+        'name',              // <input name="name" id="name">
+        'lastName',          // <input name="lastName" id="lastName">
+        'email',             // <input name="email" id="email">
+        'password',          // <input name="password" id="password">
+        'confirmPassword'    // <input name="confirmPassword" id="confirmPassword">
+      ];
+
       let formIsValid = true;
 
-      requiredFields.forEach(id => {
-        const input = document.getElementsByName(id)[0] || document.getElementById(id);
-        if (input && !input.value.trim()) {
-          input.classList.add('is-invalid');
+      // Validate required inputs by name or id
+      requiredByNameOrId.forEach(key => {
+        const el = document.getElementsByName(key)[0] || document.getElementById(key);
+        if (!el || !String(el.value || '').trim()) {
+          if (el) el.classList.add('is-invalid');
           formIsValid = false;
         } else {
-          input.classList.remove('is-invalid');
+          el.classList.remove('is-invalid');
         }
       });
 
-      if (!emailInput || emailInput.classList.contains('is-invalid') ||
-          !passwordInput || passwordInput.classList.contains('is-invalid') ||
-          !confirmPasswordInput || confirmPasswordInput.classList.contains('is-invalid')) {
+      // Validate DOB selects
+      const monthOK = !!monthSelect?.value;
+      const dayOK   = !!daySelect?.value;
+      const yearOK  = !!yearSelect?.value;
+      if (!monthOK || !dayOK || !yearOK) {
+        [monthSelect, daySelect, yearSelect].forEach(el => el && el.classList.add('is-invalid'));
+        formIsValid = false;
+      } else {
+        [monthSelect, daySelect, yearSelect].forEach(el => el && el.classList.remove('is-invalid'));
+      }
+
+      // Use live validators
+      if (emailInput?.classList.contains('is-invalid') ||
+          passwordInput?.classList.contains('is-invalid') ||
+          confirmPasswordInput?.classList.contains('is-invalid')) {
         formIsValid = false;
       }
 
-      if (formIsValid) {
-        const formData = new FormData(form);
-        console.log('📤 Submitting form to backend...');
+      if (!formIsValid) {
+        console.warn('⚠️ Form validation failed.');
+        return;
+      }
 
-        fetch('http://localhost:4000/api/auth/register', {
+      // Build ISO birthDate (YYYY-MM-DD)
+      const yyyy = yearSelect.value;
+      const mm   = String(monthSelect.value).padStart(2, '0');
+      const dd   = String(daySelect.value).padStart(2, '0');
+      const isoBirthDate = `${yyyy}-${mm}-${dd}`;
+
+      // Prepare FormData (supports file upload)
+      const formData = new FormData(form);
+
+      // Normalize DOB field for backend (change key to 'dob' if your API expects that)
+      formData.set('birthDate', isoBirthDate);
+
+      // Ensure religion/denomination/gender have proper name attributes in HTML
+      // (religionSelect name="religion"; denominationSelect name="denomination"; genderInput name="gender")
+
+      console.log('📤 Submitting form to backend...');
+      try {
+        const res = await fetch('http://localhost:4000/api/auth/register', {
           method: 'POST',
           body: formData
-        })
-          .then(res => {
-            console.log('🔁 Received response:', res);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-            return res.json();
-          })
-          .then(data => {
-            console.log('✅ Registered:', data);
-            window.location.href = 'my-profile.html';
-          })
-          .catch(error => {
-            console.error('❌ Registration failed:', error);
-            alert('Something went wrong. Please try again.');
-          });
-      } else {
-        console.warn('⚠️ Form validation failed.');
+        });
+
+        const text = await res.text();
+        let payload;
+        try { payload = JSON.parse(text); } catch { payload = text; }
+
+        if (!res.ok) {
+          console.error('❌ Registration failed:', payload);
+          const message = typeof payload === 'string'
+            ? payload
+            : (payload?.message || `Registration failed (HTTP ${res.status})`);
+          alert(message);
+          return;
+        }
+
+        console.log('✅ Registered:', payload);
+        window.location.href = 'my-profile.html';
+      } catch (error) {
+        console.error('❌ Network error:', error);
+        alert('Network error connecting to server. Make sure your backend is running and CORS allows this origin.');
       }
     });
   } else {
     console.error('❌ signupForm not found in DOM');
   }
-}); 
-  
-// ==========================
-// Update Days Based on Month and Year
-// ==========================
-function updateDays() {
-  const month = parseInt(document.getElementById('monthSelect')?.value);
-  const year = parseInt(document.getElementById('yearSelect')?.value) || new Date().getFullYear();
-  const daySelect = document.getElementById('daySelect');
+});
 
-  if (!month || !daySelect) {
-    daySelect.innerHTML = '<option selected disabled>Day</option>';
-    for (let day = 1; day <= 31; day++) {
-      const option = document.createElement('option');
-      option.value = day;
-      option.textContent = day;
-      daySelect.appendChild(option);
+/* ==========================
+ * Update Days Based on Month and Year
+ * ========================== */
+function updateDays() {
+  const monthEl = document.getElementById('monthSelect');
+  const yearEl  = document.getElementById('yearSelect');
+  const dayEl   = document.getElementById('daySelect');
+
+  if (!dayEl) return;
+
+  const month = parseInt(monthEl?.value);
+  const year  = parseInt(yearEl?.value) || new Date().getFullYear();
+
+  // Reset if month/year missing
+  if (!month) {
+    dayEl.innerHTML = '<option selected disabled value="">Day</option>';
+    for (let d = 1; d <= 31; d++) {
+      const opt = document.createElement('option');
+      opt.value = String(d);
+      opt.textContent = String(d);
+      dayEl.appendChild(opt);
     }
     return;
   }
@@ -281,11 +355,16 @@ function updateDays() {
     daysInMonth = 30;
   }
 
-  daySelect.innerHTML = '<option selected disabled>Day</option>';
-  for (let day = 1; day <= daysInMonth; day++) {
-    const option = document.createElement('option');
-    option.value = day;
-    option.textContent = day;
-    daySelect.appendChild(option);
+  const prevValue = dayEl.value;
+  dayEl.innerHTML = '<option selected disabled value="">Day</option>';
+  for (let d = 1; d <= daysInMonth; d++) {
+    const opt = document.createElement('option');
+    opt.value = String(d);
+    opt.textContent = String(d);
+    dayEl.appendChild(opt);
+  }
+  // Try to preserve previously selected day if still valid
+  if (prevValue && Number(prevValue) <= daysInMonth) {
+    dayEl.value = prevValue;
   }
 }
